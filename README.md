@@ -5,7 +5,7 @@
 The following environment variables must be set.
 
 ```bash
-export DPCOMP_CORE=$HOME/Documents/dpcomp-core
+export DPCOMP_CORE=$HOME/Documents/dpcomp_core
 export PYTHON_HOME=$HOME/virtualenvs/PyDpcomp
 export PYTHONPATH=$PYTHONPATH:$DPCOMP_CORE
 export PYTHONPATH=$PYTHONPATH:$DPCOMP_CORE/test
