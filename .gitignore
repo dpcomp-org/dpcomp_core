@@ -1,4 +1,2 @@
 *.pyc
 dpcomp_core/monolithic/build
-dpcomp_core/monolithic/cutils
-dpcomp_core/monolithic/thirdparty
