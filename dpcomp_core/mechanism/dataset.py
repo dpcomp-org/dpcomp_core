@@ -197,7 +197,7 @@ def load(filename):
 
 def subSample(dist, sampleSize, prng):
     ''' Generate a subsample of given sampleSize from an input distribution '''
-    samples = prng.choice(a=dist.size, replace=True, size=sampleSize, p=dist.flatten())
+    samples = prng.choice(a=dist.size, replace=True, size=int(sampleSize), p=dist.flatten())
     hist = numpy.histogram(samples, bins=dist.size, range=(0,dist.size))[0].astype('int32')		# return only counts (not bins)
     return hist.reshape( dist.shape )
 

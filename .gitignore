@@ -1,2 +1,9 @@
 *.pyc
 dpcomp_core/monolithic/build
+dpcomp_core/monolithic/cutils
+dpcomp_core/monolithic/thirdparty/Acs12/build
+dpcomp_core/monolithic/thirdparty/Acs12/lib
+dpcomp_core/monolithic/thirdparty/xiaokui/build
+dpcomp_core/monolithic/thirdparty/xiaokui/_structFirst.so
+dpcomp_core/monolithic/thirdparty/xiaokui/structFirst_wrap.cpp
+dpcomp_core/monolithic/thirdparty/xiaokui/structFirst.py
