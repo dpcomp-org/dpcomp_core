@@ -2,7 +2,7 @@ import numpy
 import os
 import sys
 import logging
-from dpcomp_core.monolithic.cutils import cutil
+from dpcomp_core.monolithic.external.dawa.cutils import cutil
 from dpcomp_core.monolithic.partition_engines import partition_engine
 from dpcomp_core import util
 

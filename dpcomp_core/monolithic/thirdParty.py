@@ -6,11 +6,11 @@ from dpcomp_core import util
 from dpcomp_core.monolithic import estimate_engine
 import numpy
 # import the wrapped mean strcture first code
-from dpcomp_core.monolithic.thirdparty.xiaokui import structFirst
+from dpcomp_core.monolithic.external.thirdparty.xiaokui import structFirst
 
 # import Acs12 lib
-from dpcomp_core.monolithic.thirdparty.Acs12.lib import EFPA
-from dpcomp_core.monolithic.thirdparty.Acs12.lib import Clustering
+from dpcomp_core.monolithic.external.thirdparty.Acs12.lib import EFPA
+from dpcomp_core.monolithic.external.thirdparty.Acs12.lib import Clustering
 
 
 
