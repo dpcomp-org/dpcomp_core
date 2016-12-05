@@ -1,7 +1,7 @@
 import math
 import numpy as np
-from dpcomp_core.monolithic.ahp import ahp_engine
-from dpcomp_core.monolithic import estimate_engine
+from ahp import ahp_engine
+import estimate_engine
 from dpcomp_core import util 
 
 

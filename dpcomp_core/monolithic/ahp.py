@@ -1,6 +1,6 @@
 import math
 import numpy as np
-from dpcomp_core.monolithic import estimate_engine
+import estimate_engine
 from dpcomp_core import util 
 
 # AHP algorithm from

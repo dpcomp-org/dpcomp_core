@@ -1,7 +1,7 @@
-from dpcomp_core.monolithic import estimate_engine
-from dpcomp_core.monolithic.routine_engines import routine_engine
+import estimate_engine
+from routine_engines import routine_engine
 from dpcomp_core.mixins import Marshallable
-from dpcomp_core.monolithic import greedyH
+import greedyH
 import numpy
 from dpcomp_core import util
 

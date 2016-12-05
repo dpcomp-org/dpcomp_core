@@ -1,8 +1,8 @@
-from dpcomp_core.monolithic import estimate_engine
-from dpcomp_core.monolithic.partition_engines import l1partition
+import estimate_engine
+from partition_engines import l1partition
 from dpcomp_core.mixins import Marshallable
-from dpcomp_core.monolithic.routine_engines import routine_engine
-from dpcomp_core.monolithic import greedyH
+from routine_engines import routine_engine
+import greedyH
 import numpy as np
 from dpcomp_core import util
 import logging 

@@ -1,4 +1,4 @@
-from dpcomp_core.monolithic.estimate_engine import estimate_engine
+from estimate_engine import estimate_engine
 import numpy
 from dpcomp_core import util
 

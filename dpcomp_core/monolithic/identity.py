@@ -1,5 +1,5 @@
 import numpy
-from dpcomp_core.monolithic import estimate_engine
+import estimate_engine
 from dpcomp_core import util
 
 class identity_engine(estimate_engine.estimate_engine):

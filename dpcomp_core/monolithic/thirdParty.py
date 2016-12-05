@@ -3,14 +3,14 @@ import math
 import os
 import sys
 from dpcomp_core import util
-from dpcomp_core.monolithic import estimate_engine
+import estimate_engine
 import numpy
 # import the wrapped mean strcture first code
-from dpcomp_core.monolithic.thirdparty.xiaokui import structFirst
+from thirdparty.xiaokui import structFirst
 
 # import Acs12 lib
-from dpcomp_core.monolithic.thirdparty.Acs12.lib import EFPA
-from dpcomp_core.monolithic.thirdparty.Acs12.lib import Clustering
+from thirdparty.Acs12.lib import EFPA
+from thirdparty.Acs12.lib import Clustering
 
 
 

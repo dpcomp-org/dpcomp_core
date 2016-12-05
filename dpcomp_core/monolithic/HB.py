@@ -1,8 +1,8 @@
-from dpcomp_core.monolithic import h_tree
+import h_tree
 import math
 import numpy as np
 from dpcomp_core import util 
-from dpcomp_core.monolithic import estimate_engine
+import estimate_engine
 
 
 

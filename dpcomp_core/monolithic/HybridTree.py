@@ -1,10 +1,10 @@
 import numpy 
 import math
-from dpcomp_core.monolithic import estimate_engine
+import estimate_engine
 from dpcomp_core import util
 
-from dpcomp_core.monolithic.thirdparty.Spatial_DP.Params import Params
-from dpcomp_core.monolithic.thirdparty.Spatial_DP.KExp import KExp
+from thirdparty.Spatial_DP.Params import Params
+from thirdparty.Spatial_DP.KExp import KExp
 
 
 

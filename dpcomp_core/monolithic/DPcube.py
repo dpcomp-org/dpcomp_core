@@ -1,7 +1,7 @@
 import math
 import numpy
-from dpcomp_core.monolithic import estimate_engine
-from dpcomp_core.monolithic import UG
+import estimate_engine
+import UG
 from dpcomp_core import util
 
 
