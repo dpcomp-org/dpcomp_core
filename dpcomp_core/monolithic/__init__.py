@@ -16,12 +16,13 @@ from dpcomp_core.monolithic import privelet
 from dpcomp_core.monolithic import privelet2D
 from dpcomp_core.monolithic import DPcube1D
 from dpcomp_core.monolithic import DPcube
-from dpcomp_core.monolithic import thirdParty
 from dpcomp_core.monolithic import mwemND
 from dpcomp_core.monolithic import greedyH
 from dpcomp_core.monolithic import greedyH_only
 from dpcomp_core.monolithic import dawa
 from dpcomp_core.monolithic import dawa2D
+from dpcomp_core.monolithic import thirdParty
+
 from dpcomp_core import util
 import hashlib
 

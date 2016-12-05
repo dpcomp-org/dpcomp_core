@@ -3,8 +3,8 @@ import math
 from dpcomp_core.monolithic import estimate_engine
 from dpcomp_core import util
 
-from dpcomp_core.monolithic.thirdparty.Spatial_DP.Params import Params
-from dpcomp_core.monolithic.thirdparty.Spatial_DP.KExp import KExp
+from dpcomp_core.monolithic.external.thirdparty.Spatial_DP.Params import Params
+from dpcomp_core.monolithic.external.thirdparty.Spatial_DP.KExp import KExp
 
 
 class QuadTree_engine(estimate_engine.estimate_engine):

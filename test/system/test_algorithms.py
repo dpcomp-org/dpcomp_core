@@ -172,7 +172,19 @@ class TestAlgorithm(TestCommon):
         E_dict = E.asDict()
         self.assertEqual(self.expr_seed, E_dict['seed'])
         self.assertEqual(self.expr_eps, E_dict['epsilon'])
+    
+    def test_ahp_fast(self):
+        A = ahp.ahp_fast_engine()
+        E = experiment.Single(self.X1, 
+                              self.W1, 
+                              A, 
+                              epsilon=self.expr_eps, 
+                              seed=self.expr_seed).run()
 
+        E_dict = E.asDict()
+        self.assertEqual(self.expr_seed, E_dict['seed'])
+        self.assertEqual(self.expr_eps, E_dict['epsilon'])
+    
     def test_QuadTree(self):
         A = QuadTree.QuadTree_engine()
         E = experiment.Single(self.X2, 
@@ -413,3 +425,6 @@ class TestAlgorithm(TestCommon):
         E_dict = E.asDict()
         self.assertEqual(self.expr_seed, E_dict['seed'])
         self.assertEqual(self.expr_eps, E_dict['epsilon']) 
+
+if __name__ == "__main__":
+    unittest.main(verbosity=2)   

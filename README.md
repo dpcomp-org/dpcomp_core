@@ -44,7 +44,7 @@ pip install -r resources/requirements.txt
 Finally, after instantiating the virtualenv, compile the C libraries as follows.
 
 ```bash
-cd $DPCOMP_HOME/dpcomp_core/monolithic
+cd $DPCOMP_HOME/dpcomp_core/monolithic/external
 ./setup.sh
 ```
 

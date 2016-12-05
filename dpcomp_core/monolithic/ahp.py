@@ -2,6 +2,7 @@ import math
 import numpy as np
 from dpcomp_core.monolithic import estimate_engine
 from dpcomp_core import util 
+from dpcomp_core.monolithic.external.ahp_fast import ahp_fast
 
 # AHP algorithm from
 # "Towards Accurate Histogram Publication under Differential Privacy"
@@ -25,6 +26,24 @@ class ahp_engine(estimate_engine.estimate_engine):
 
         assert len(x.shape)==1, '%s is defined for 1D data only' % self.__class__.__name__
         return ahpr(x, epsilon, self._ratio, self._eta, prng)
+
+class ahp_fast_engine(estimate_engine.estimate_engine):
+    """Estimate a dataset by assuming it is uniform over the domain; total number of records derived privately according to epsilon."""
+
+    def __init__(self, ratio = 0.85, eta = 0.35, short_name = 'AHP' ):
+        self.init_params = util.init_params_from_locals(locals())
+        self._ratio = ratio
+        self._eta = eta
+        self.short_name = short_name
+
+    def Run(self, Q, x, epsilon, seed):
+        assert seed is not None, 'seed must be set'
+
+        prng = np.random.RandomState(seed)
+
+        assert len(x.shape)==1, '%s is defined for 1D data only' % self.__class__.__name__
+        res = ahp_fast.ahpr(x, epsilon, self._ratio, self._eta, prng, debug=False)
+        return res
 
 class ahp_engine_adaptive(estimate_engine.estimate_engine):
         """Adaptive version that choose free parameters according to the product of epsilon and data scale."""
