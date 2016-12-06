@@ -20,6 +20,7 @@ class Single(Marshallable, Cacheable):
         self.seed = seed
 
         self.X_hat = None
+        self.state_op_log = None
 
     def run(self, update_payload=False):
         start = time.time()
@@ -28,7 +29,17 @@ class Single(Marshallable, Cacheable):
         self.W = self.maybe(self.W, self.W.hash, 'compile')
 
         X_hat_key = self.A.hash + self.X.hash + self.W.hash + repr(self.epsilon) + repr(self.seed)
-        self.X_hat = self.maybe(self.A, X_hat_key,'Run', (self.W, self.X.payload, self.epsilon, self.seed)) 
+
+        # monolithic algorithms return X_hat (an ndarray)
+        # Run method of alg-op algorithms now returns (X_hat, op_log) so we can capture op_log
+        # See operators.Operator.Run(..)
+        # This is a hack to handle both:
+        ret = self.maybe(self.A, X_hat_key,'Run', (self.W, self.X.payload, self.epsilon, self.seed))
+        if isinstance(ret, numpy.ndarray):
+            self.X_hat = ret
+        else:
+            self.X_hat = ret[0]
+            self.state_op_log = ret[1]
 
         self.time = time.time() - start
 
