@@ -165,6 +165,8 @@ class RandomRange(Workload):
     @classmethod
     def oneD(cls, shape_list, domain_shape_int, size, seed=9001):
         ''' Convenience method allowing ints to be submitted in 1D case '''
+        if shape_list == None:
+            return cls(None,(domain_shape_int,), size, seed)
         return cls([(i,) for i in shape_list], (domain_shape_int,), size, seed)
 
 def randomQueryShapes(domain_shape, prng):
@@ -189,5 +191,4 @@ def placeRandomly(query_shape, domain_shape, prng=None):
         lb.append(lower)
         ub.append(lower + query_shape[i] - 1)
     return tuple(lb), tuple(ub)
-
 
