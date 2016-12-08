@@ -81,11 +81,11 @@ class routine_engine(object):
             # logging
             eps2 = (1-self._ratio) * epsilon   # this is epsilon_2 used in paper (the epsilon for estimation)
             devs = abs( numpy.array(x) - (sum(x) / float(len(x))) )
-            logging.info('PARTITION: epsilon for partition %f' % (self._ratio * epsilon))
-            logging.info('PARTITION: number of partitions %i' % len(partition))
-            logging.info('PARTITION: first 10 buckets %s' % str(partition[0:10]) )
-            logging.info('PARTITION: score of 1 bucket partition: %f + %f = %f' % ( sum(devs), 1/eps2, sum(devs) + 1/eps2)) 
-            logging.info('PARTITION: score of max bucket partition: %f + %f = %f' % ( 0, len(x)/eps2, 0 + len(x)/eps2)) 
+        #    logging.info('PARTITION: epsilon for partition %f' % (self._ratio * epsilon))
+        #    logging.info('PARTITION: number of partitions %i' % len(partition))
+        #    logging.info('PARTITION: first 10 buckets %s' % str(partition[0:10]) )
+        #    logging.info('PARTITION: score of 1 bucket partition: %f + %f = %f' % ( sum(devs), 1/eps2, sum(devs) + 1/eps2))
+        #    logging.info('PARTITION: score of max bucket partition: %f + %f = %f' % ( 0, len(x)/eps2, 0 + len(x)/eps2))
             ##
             counts = self._estimate_engine.Run(
                         self._workload_reform(Q, partition, n),
