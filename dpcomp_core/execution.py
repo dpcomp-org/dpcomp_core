@@ -50,7 +50,7 @@ def process_experiments(params_map, writer, procs=1):
         writer.write(group_metrics)
 
 
-def assemble_experiments(algorithms, datasets, domains, epsilons, scales, query_sizes, ex_seeds, ds_seeds):
+def assemble_experiments(algorithms, datasets, workloads, domains, epsilons, scales, query_sizes, ex_seeds, ds_seeds):
     params_list = []
     for ex_seed in ex_seeds:
         for ds_seed in ds_seeds:
@@ -61,6 +61,7 @@ def assemble_experiments(algorithms, datasets, domains, epsilons, scales, query_
                                                 epsilons, 
                                                 scales, 
                                                 query_sizes, 
+                                                workloads,
                                                 ds_seed)
 
     params_map = defaultdict(list)

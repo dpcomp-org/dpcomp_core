@@ -16,14 +16,19 @@ def D(nickname, scale, domain, seed):
                                           seed=seed)
 
 
-def W(dim, domain, size, seed):
-    if dim == 1:
+def W(dim, domain, size, workclass, seed):
+    if workclass == workload.Prefix1D:
         return workload.Prefix1D(domain_shape_int=domain)
-    elif dim == 2:
+    elif workclass == workload.RandomRange:
+        if dim == 1:
+            domain = [domain]
+
         return workload.RandomRange(shape_list=None,
                                     domain_shape=domain,
                                     size=size,
                                     seed=seed)
+    else:
+        raise TypeError('unsupported workload class %s' % repr(workclass))
 
 
 def E(d, w, a, epsilon, seed):
@@ -46,7 +51,15 @@ def config_hash(params):
 
     return h.hexdigest()
 
-def cartesian_product(exp_seed, nickname_map, domain_map, algorithm_map, epsilons, scales, query_sizes, data_seed=0):
+def cartesian_product(exp_seed, 
+                      nickname_map, 
+                      domain_map, 
+                      algorithm_map, 
+                      epsilons, 
+                      scales, 
+                      query_sizes, 
+                      workload_map={1: [workload.Prefix1D], 2: [workload.RandomRange]}, 
+                      data_seed=0):
     params_list = []
 
     for nickname, dim in nickname_map.items():
@@ -54,16 +67,18 @@ def cartesian_product(exp_seed, nickname_map, domain_map, algorithm_map, epsilon
             for scale in scales[dim]:
                 for domain in domain_map[dim]:
                     for algorithm in algorithm_map[dim]:
-                        for query_size in query_sizes:
-                            params_list.append({'nickname': nickname,
-                                                'dimension': dim,
-                                                'exp_seed': exp_seed,
-                                                'data_seed': data_seed,
-                                                'epsilon': epsilon,
-                                                'scale': scale,
-                                                'domain': domain,
-                                                'query_size': query_size,
-                                                'algorithm': algorithm})
+                        for workload_class in workload_map[dim]:
+                            for query_size in query_sizes:
+                                params_list.append({'nickname': nickname,
+                                                    'dimension': dim,
+                                                    'exp_seed': exp_seed,
+                                                    'data_seed': data_seed,
+                                                    'epsilon': epsilon,
+                                                    'scale': scale,
+                                                    'domain': domain,
+                                                    'query_size': query_size,
+                                                    'algorithm': algorithm,
+                                                    'workclass': workload_class})
 
     return params_list
 
@@ -73,7 +88,7 @@ def run(params):
     WORK_SEED = 0
 
     d = D(params['nickname'], params['scale'], params['domain'], params['data_seed'])
-    w = W(params['dimension'], params['domain'], params['query_size'], WORK_SEED)
+    w = W(params['dimension'], params['domain'], params['query_size'], params['workclass'], WORK_SEED)
     a = util.instantiate(util.classname(params['algorithm']), params['algorithm'].init_params)
     e = E(d, w, a, params['epsilon'], params['exp_seed'])
     m = M(e)
