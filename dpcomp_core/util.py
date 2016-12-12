@@ -3,8 +3,7 @@ import json
 import logging
 import numpy as np
 
-PRIMITIVES = (int, float, str, bool, long, unicode, 
-              tuple, list, type(None))
+PRIMITIVES = (int, float, str, bool, long, unicode, type(None))
 
 
 def class_to_dict(inst, ignore_list=[], attr_prefix=''):
@@ -72,6 +71,13 @@ def prepare_for_json(item):
         return item.marshal()
     elif type(item) == np.ndarray:
         return {'ndarray': item.tolist(), 'shape': item.shape}
+    elif type(item) == list or type(item) == tuple:
+        replacement = []
+
+        for x in item:
+            replacement.append(prepare_for_json(x))
+
+        return replacement
     elif type(item) == dict:
         replacement = {}
 
@@ -97,6 +103,13 @@ def receive_from_json(item):
         return np.array(item['ndarray']).reshape(item['shape'])
     elif type(item) == dict and 'marshaled' in item:
         return get_class(item['class']).unmarshal(item['init_params'])
+    elif type(item) == list or type(item) == tuple:
+        replacement = []
+
+        for x in item:
+            replacement.append(receive_from_json(x))
+
+        return replacement
     elif type(item) == dict:
         replacement = {}
 

@@ -41,11 +41,13 @@ class TestUtil(unittest.TestCase):
     def test_json_hierarchical(self):
         d1 = {'a': self.D,
               'b': {'b1': self.D,
-                    'b2': {'b21': self.D}}}
+                    'b2': {'b21': self.D}},
+              'c': [self.D]}
 
         self.assertEqual(d1['a'].hash, serde(d1)['a'].hash)
         self.assertEqual(d1['b']['b1'].hash, serde(d1)['b']['b1'].hash)
         self.assertEqual(d1['b']['b2']['b21'].hash, serde(d1)['b']['b2']['b21'].hash)
+        self.assertEqual(d1['c'][0].hash, serde(d1)['c'][0].hash)
 
         d2 = {1: np.ones((3,2)),
               2: {21: np.ones((5,4)),
