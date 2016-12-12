@@ -4,6 +4,7 @@ from dpcomp_core.execution import assemble_experiments
 from dpcomp_core.execution import FileWriter
 from dpcomp_core.execution import ListWriter
 from dpcomp_core.execution import process_experiments
+from dpcomp_core.mechanism import workload
 import mock
 import unittest
 
@@ -42,6 +43,7 @@ class TestExecution(unittest.TestCase):
 
         algorithms = {1: mock.MagicMock()}
         datasets = {mock.MagicMock(): 1}
+        workloads = {1: workload.Prefix1D}
         domains = {1: mock.MagicMock()}
         epsilons = {1: mock.MagicMock()}
         scales = {1: mock.MagicMock()}
@@ -51,10 +53,11 @@ class TestExecution(unittest.TestCase):
         ds = mock.MagicMock()
         ds_seeds = [ds]
 
-        params = (ex, datasets, domains, algorithms, epsilons, scales, query_sizes, ds)
+        params = (ex, datasets, domains, algorithms, epsilons, scales, query_sizes, workloads, ds)
     
         assemble_experiments(algorithms, 
                              datasets, 
+                             workloads,
                              domains, 
                              epsilons, 
                              scales, 

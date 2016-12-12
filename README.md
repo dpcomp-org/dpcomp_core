@@ -8,7 +8,6 @@ The following environment variables must be set.
 export DPCOMP_CORE=$HOME/Documents/dpcomp_core
 export PYTHON_HOME=$HOME/virtualenvs/PyDpcomp
 export PYTHONPATH=$PYTHONPATH:$DPCOMP_CORE
-export PYTHONPATH=$PYTHONPATH:$DPCOMP_CORE/test
 export DPCOMP_LOG_PATH=$HOME/logs
 export DPCOMP_LOG_LEVEL=DEBUG
 export HOSTNAME=
