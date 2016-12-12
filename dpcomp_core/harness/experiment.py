@@ -30,16 +30,14 @@ class Single(Marshallable, Cacheable):
 
         X_hat_key = self.A.hash + self.X.hash + self.W.hash + repr(self.epsilon) + repr(self.seed)
 
-        # monolithic algorithms return X_hat (an ndarray)
-        # Run method of alg-op algorithms now returns (X_hat, op_log) so we can capture op_log
-        # See operators.Operator.Run(..)
-        # This is a hack to handle both:
+        # monolithic algorithms return only X_hat (a numpy.ndarray)
+        # alg-op operator algorithms returns the tuple (X_hat, ancillary_output) 
         ret = self.maybe(self.A, X_hat_key,'Run', (self.W, self.X.payload, self.epsilon, self.seed))
+
         if isinstance(ret, numpy.ndarray):
             self.X_hat = ret
         else:
-            self.X_hat = ret[0]
-            self.state_op_log = ret[1]
+            self.X_hat, self.ancillary_output = ret
 
         self.time = time.time() - start
 
