@@ -2,6 +2,7 @@ import importlib
 import json
 import logging
 import numpy as np
+import sys
 
 PRIMITIVES = (int, float, str, bool, long, unicode, type(None))
 
@@ -168,10 +169,14 @@ def standardize(item):
     return item
 
 
-def setup_logging(logger_name, log_file, log_level):
+def setup_logging(logger_name, log_file=None, log_level='DEBUG'):
     logger = logging.getLogger(logger_name)
     formatter = logging.Formatter("%(asctime)s - %(name)s - %(levelname)s - %(message)s")
-    handler = logging.FileHandler(log_file)
+
+    if log_file is None:
+        handler = logging.StreamHandler(sys.stdout)
+    else:
+        handler = logging.FileHandler(log_file)
 
     handler.setFormatter(formatter)
     logger.addHandler(handler)
