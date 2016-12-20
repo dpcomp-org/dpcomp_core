@@ -1,5 +1,6 @@
 import numpy
-
+import numpy.ma as ma
+import copy
 """
 A partition is an array whose shape matches the domain of a data array.
 Common values in a partition array indicate groups
@@ -194,60 +195,38 @@ class Partition(object):
         return numpy.array([self.expand_query(q) for q in w])
     
     ######################################################
-    ### projecting operations (for split operator)
+    ### projecting operations and reverse project (for split/ merger operator)
     ######################################################
-    def project_data(self,x,group_id):
+    @staticmethod
+    def project(x,mask):
+        """undo projection. All the cells which were masked in projection gets assigned a zero.
+            e.g. mask = [0,0,1,1] project on the first two columns of x.
         """
-        :param v: The data vector to be projected 
-        :param group_id: The selected group in the partition
-        :return : The projection of data onto the group with index group_id specified in partition. 
-        """
-        assert x.shape == self.input_shape, 'Shape of x <%s> and shape of partition vector <%s> must match in projection.' \
-                                                  % (str(x.shape), str(self.input_shape))
-        assert group_id in self.vector, "The index %s does not exist in partition %s" %(str(group_id),str(self.vector))
-        proj = []
+        assert len(x) == len(mask), "Projection mask and vector has different shape"
 
-        for ind,group in enumerate(self.vector):
-            if group == group_id:
-                proj.append(x[ind])
-                
-        return numpy.array(proj)
+        mx = ma.masked_array(x, mask=mask)
+        return mx.compressed()
 
-    def project_query(self,q,group_id):
+    @staticmethod
+    def unproject(projx,mask):
+        """undo projection. All the cells which were masked in projection gets assigned a zero.
+            e.g. with projx = [1,2,3,4], and mask = [0,0,1,1,0,0], return x = [1,2,0,0,3,4]
         """
-        :param q: The query vector to be projected 
-        :param group_id: The selected group in the partition
-                :return : The projection onto the group with index group_id specified in partition. 
-                  As side information, also return the sum of non-zero elements outside the group with index group_id. 
-                  If this value is zero, means the query only asks about information within the group.
-        """
-        assert q.shape == self.input_shape, 'Shape of x <%s> and shape of partition vector <%s> must match in projection.' \
-                                                  % (str(q.shape), str(self.input_shape))
-        assert group_id in self.vector, "The index %s does not exist in partition %s" %(str(group_id),str(self.vector))
-        proj = []; sum_outside_group = 0
-        for ind,group in enumerate(self.vector):
-            if group == group_id:
-                proj.append(q[ind])
-            else:
-                sum_outside_group+= q[ind]
+        mask = copy.copy(mask)
+        x = ma.array(numpy.zeros_like(mask),mask = mask)
+        x[~x.mask] = projx
+        return x.data
 
-        return numpy.array(proj),sum_outside_group
 
-    def project_workload(self,w,group_id,NONZERO=True):
-        """
-        :param v: The list of query vectors (workload) to be projected 
-        :param group_id: The selected group in the partition
-        :param NONZERO: If set to True, the all-zero projected queries are not included. These are the queries which don't ask information within this group.
-                    e.g. query [0,0,0,1,1] projected on group 1 of partition [1,1,2,2,3] will not be returned.
-        """
-        projected_W=[]
-        for q in w:
-            assert q.shape == self.input_shape, 'Mismatch between query size in workload and partition vector'
-            proj_q,temp = self.project_query(q,group_id)
-            if not all(v == 0 for v in proj_q):
-                projected_W.append(proj_q)
+    @staticmethod
+    def project_workload(W,mask):
+        """project workload or a list of measurements"""
+        return numpy.array([project(q,mask) for q in W])
 
-        return numpy.array(projected_W)     
+    @staticmethod
+    def unproject_workload(W,mask):
+        """unproject a list of measurements"""
+        return numpy.array([unproject(q,mask) for q in W])
 
     
 
