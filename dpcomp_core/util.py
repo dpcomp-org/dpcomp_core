@@ -1,4 +1,5 @@
 import importlib
+import inspect
 import json
 import logging
 import numpy as np
@@ -62,6 +63,15 @@ def init_params_from_locals(locals):
     return params
 
 
+def contains_superclass(obj, classname):
+    if not inspect.isclass(type(obj)):
+        return False
+
+    superclasses = map(lambda cls: cls.__name__, inspect.getmro(obj.__class__))
+
+    return classname in superclasses
+
+
 def prepare_for_json(item):
     """Operates on PRIMITIVES, dicts, numpy.array, and persistable 
        objects. 
@@ -70,6 +80,8 @@ def prepare_for_json(item):
         return item
     elif 'marshal' in dir(item):
         return item.marshal()
+    elif contains_superclass(item, 'Inspectable'):
+        return prepare_for_json(item.inspect())
     elif type(item) == np.ndarray:
         return {'ndarray': item.tolist(), 'shape': item.shape}
     elif type(item) == list or type(item) == tuple:

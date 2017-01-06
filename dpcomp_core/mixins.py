@@ -72,3 +72,13 @@ class Marshallable(object):
     @classmethod
     def unmarshal(cls, marshaled):
         return cls(**util.receive_from_json(marshaled))
+
+
+class Inspectable(object):
+    """Objects that inherit from this class should ensure that
+       every instance member has a type that can be handled by
+       dpcomp_core.util.prepare_for_json.
+    """
+
+    def inspect(self):
+        return vars(self)
