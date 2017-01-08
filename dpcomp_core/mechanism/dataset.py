@@ -5,7 +5,6 @@ import numpy
 
 from dpcomp_core import util
 from dpcomp_core.mixins import Marshallable
-from dpcomp_core.mechanism import Partition
 
 # short cuts for dataset names, filenames
 filenameDict = {
@@ -67,6 +66,25 @@ class Dataset(Marshallable):
 
         self._compiled = False
 
+    def reduce_data(self,p_grid,data):
+        """reduce data to the domain indicated by p_grid"""
+        assert data.shape == p_grid.shape, 'Shape of x and shape of partition vector must match.'
+        #get out_shape
+        if p_grid.ndim == 1:
+            out_shape =(len(numpy.unique(p_grid)), )
+        else:
+            out = [len(numpy.unique(numpy.compress([True], p_grid, axis=i))) for i in range(p_grid.ndim)]
+            out.reverse()   # rows/cols need to be reversed here
+            out_shape = tuple(out)
+        #reduce
+        unique, indices, inverse, counts = numpy.unique(p_grid, return_index=True, return_inverse=True, return_counts=True)
+        res = numpy.zeros_like(unique, dtype=float)
+        for index, c in numpy.ndenumerate(data.ravel()):   # needs to be flattened for parallel indexing with output of unique
+            res[ inverse[index] ] += c
+           
+        return numpy.array(res).reshape(out_shape)
+
+
     def compile(self):
         if self._compiled:
             return self
@@ -77,11 +95,11 @@ class Dataset(Marshallable):
             for red, rem in q:
                 assert rem == 0, 'Domain must be reducible to target domain by uniform grid: %i, %i' % (red,rem)
             grid_shape = [r[0] for r in q]
-            p_grid = partition_grid(self._payload.shape, grid_shape, canonical_order=True)
-            self._payload = p_grid.reduce_data(self._payload)  # update payload
+            p_grid = partition_grid(self._payload.shape, grid_shape)
+            self._payload = self.reduce_data(p_grid,self._payload)  # update payload
 
             if self._dist is not None:
-                self._dist = p_grid.reduce_data(self._dist)  # update dist
+                self._dist = self.reduce_data(p_grid,self._dist)  # update dist
 
         self._compiled = True
         self._payload = self._payload.astype("int") # partition engines need payload to be of type int
@@ -214,7 +232,24 @@ def general_pairing(tup):
         return tup[0]  # no need for pairing in 1D case
     else:
         return reduce(cantor_pairing, tup)
-def partition_grid(domain_shape, grid_shape, canonical_order=False):
+
+def canonicalTransform(vector):
+    """ transform a partition vector according to the canonical order.
+     if bins are noncontiguous, use position of first occurrence.
+     e.g. [3,4,1,1] => [1,2,3,3]; [3,4,1,1,0,1]=>[0,1,2,2,3,2]
+    """
+    unique, indices, inverse = numpy.unique(vector, return_index=True, return_inverse=True)
+    uniqueInverse, indexInverse = numpy.unique(inverse,return_index =True)
+
+    indexInverse.sort()
+    newIndex = inverse[indexInverse]
+    tups = list(zip(uniqueInverse, newIndex)) #replace uniqueInverse with unique if we want to use the exact numbers in partition vector
+    tups.sort(key=lambda x: x[1])
+    u = numpy.array( [u for (u,i) in tups] )
+    vector = u[inverse].reshape(vector.shape)
+    return vector
+
+def partition_grid(domain_shape, grid_shape):
     """
     :param domain_shape: a shape tuple describing the domain, e.g (6,6) (in 2D)
     :param grid_shape: a shape tuple describing cells to be grouped, e.g. (2,3) to form groups of 2 rows and 3 cols
@@ -245,5 +280,7 @@ def partition_grid(domain_shape, grid_shape, canonical_order=False):
 
     # numpy.fromfunction builds an array of domain_shape by calling a function with each index tuple (e.g. (i,j))
     partition_array = numpy.fromfunction(h, domain_shape, dtype=int)
-    return Partition.Partition( partition_array, canonical_order )
+    # transform to canonical order 
+    partition_array = canonicalTransform(partition_array)
+    return partition_array
 
