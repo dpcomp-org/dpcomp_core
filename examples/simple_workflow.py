@@ -3,7 +3,7 @@ from dpcomp_core.execution import assemble_experiments
 from dpcomp_core.execution import ListWriter
 from dpcomp_core.execution import process_experiments
 from dpcomp_core.mechanism import workload
-from dpcomp_core.monolithic import *
+from dpcomp_core.monolithic import identity, HB, AG, uniform
 from dpcomp_core import util
 import pprint
 
