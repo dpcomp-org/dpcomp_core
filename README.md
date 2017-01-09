@@ -1,7 +1,7 @@
 # DPComp Core
 [DPComp.org](https://www.dpcomp.org/) is a web-based tool designed to help both practitioners and researchers assess the accuracy of state-of-the-art differentially private algorithms based on [DPBench](#dpbench).
 
-This repository contains dataset, workload, algorithms used in DPBench, and is supporting core functionalities of dpcomp.org. With this dpcomp_core, a user could reproduce previous evalutations, compare provided algorithms with new data, or evaluate new algorithms. 
+This repository contains datasets, workloads, algorithms used in DPBench, and is supporting core functionalities of dpcomp.org. With this dpcomp_core, a user could reproduce previous evalutations, compare provided algorithms with new data, or evaluate new algorithms. 
 
 References to supporting paper are [here](#ref).
 ## DPComp Core Setup
@@ -71,7 +71,7 @@ nosetests test.system.test_experiment:TestExperiment
 |Canonical name| Additional aliases| Reference | invocation (omitting the `dpcomp_core.monolithic` prefix) |Implementation|
 | ------------- |:-------------:| -----:|:---------:|:---:|
 | Identity    | - |[C. Dwork, F. McSherry, K. Nissim, and A. Smith. Calibrating noise to sensitivity in private data analysis. TCC, 2006.](http://dl.acm.org/citation.cfm?id=2180305) |`identity.identity_engine()`| DPComp team|
-|Privelet    | - | [ X. Xiao, G. Wang, and J. Gehrke. Differential privacy via wavelet transforms. ICDE, 2010.](http://dl.acm.org/citation.cfm?id=2007020) | `privelet.privelet_engine()` for 1D `privelet2D.privelet2D_engine()` for 2D| |
+|Privelet    | - | [ X. Xiao, G. Wang, and J. Gehrke. Differential privacy via wavelet transforms. ICDE, 2010.](http://dl.acm.org/citation.cfm?id=2007020) | `privelet.privelet_engine()` for 1D `privelet2D.privelet2D_engine()` for 2D|DPComp team |
 |H   | - | [M. Hay,V. Rastogi,G. Miklau,and D. Suciu. Boosting the accuracy of differentially private histograms through consistency. PVLDB, 2010.](http://dl.acm.org/citation.cfm?id=1920970)  | `HB.H2_engine()`(only 1D)| DPComp team|
 |HB    | - |  [W. Qardaji, W. Yang,and N. Li. Understanding hierarchical methods for differentially private histograms. PVLDB, 2013.](http://dl.acm.org/citation.cfm?id=2556576) |`HB.HB_engine()` for 1D `HB2D.HB2D_engine()` for 2D|DPComp team |
 |Greedy H    | greedyH | [C. Li, M. Hay, and G. Miklau. A data- and workload-aware algorithm for range queries under differential privacy. PVLDB, 2014.](http://dl.acm.org/citation.cfm?id=2732271)  |`dawa.greedyH_only_engine()` (only 1D) |DPComp team |
