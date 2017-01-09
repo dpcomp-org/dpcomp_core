@@ -5,16 +5,11 @@ import hashlib
 import thirdparty
 
 import AG
-import AG_noisy
 import ahp
-import ahpND
-import dawa
-import dawa2D
 import DPcube1D
 import DPcube
+import dawa
 import estimate_engine
-import greedyH
-import greedyH_only
 import HB
 import HB2D
 import identity
@@ -24,9 +19,7 @@ import mwemND
 import privelet
 import privelet2D
 import QuadTree
-import thirdParty
 import UG
-import UG_noisy
 import uniform
 
 

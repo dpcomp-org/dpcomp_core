@@ -3,7 +3,7 @@ import itertools
 import numpy
 from scipy.linalg import block_diag
 from dpcomp_core import util
-import estimate_engine 
+from dpcomp_core.monolithic import estimate_engine 
 
 
 class greedyH_engine(estimate_engine.estimate_engine):

@@ -3,7 +3,7 @@ from dpcomp_core.mechanism import dataset
 from dpcomp_core.mechanism import metric
 from dpcomp_core.mechanism import workload
 from dpcomp_core.monolithic import BaseAlgorithm
-from dpcomp_core.monolithic import uniform, AG_noisy
+from dpcomp_core.monolithic import uniform, AG
 from dpcomp_core import util
 from test import TestCommon
 import unittest
@@ -28,7 +28,7 @@ class TestExecution(TestCommon):
         self.W2 = workload.RandomRange(shape_list=[(5,5),(10,10)], domain_shape=domain2, size=1000, seed=9001)
 
         self.A1 = uniform.uniform_noisy_engine()
-        self.A2 = AG_noisy.AG_engine_Noisy(c=10, c2=5, alpha=.4, totalBudget=.02)
+        self.A2 = AG.AG_engine(c=10, c2=5, alpha=.4)
 
         self.E1 = experiment.Single(self.X1, 
                                     self.W1, 
@@ -78,3 +78,6 @@ class TestExecution(TestCommon):
         M.compute()
         self.assertDictEqual(E.analysis_payload()['ancillary_output'], 
                              ancillary_payload)
+
+if __name__ == "__main__":
+    unittest.main(verbosity=3)

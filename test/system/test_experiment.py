@@ -2,7 +2,7 @@ from dpcomp_core.harness import experiment
 from dpcomp_core.mechanism import dataset
 from dpcomp_core.mechanism import metric
 from dpcomp_core.mechanism import workload
-from dpcomp_core.monolithic import uniform, AG_noisy
+from dpcomp_core.monolithic import uniform, AG
 from test import TestCommon
 import unittest
 
@@ -28,7 +28,7 @@ class TestExperiment(TestCommon):
         self.W2 = workload.RandomRange(shape_list=[(5,5),(10,10)], domain_shape=domain2, size=1000, seed=9001)
 
         self.A = uniform.uniform_noisy_engine()     # this algorithm works for 1D and 2D
-        self.A2 = AG_noisy.AG_engine_Noisy(c=10, c2=5, alpha=.4, totalBudget=.02)      # this algorithm works for 2D only
+        self.A2 = AG.AG_engine(c=10, c2=5, alpha=.4)      # this algorithm works for 2D only
 
     def tearDown(self):
         super(TestExperiment, self).tearDown()
@@ -55,3 +55,5 @@ class TestExperiment(TestCommon):
         E_dict = E.asDict()
         self.assertEqual(self.expr_seed, E_dict['seed'])
         self.assertEqual(self.expr_eps, E_dict['epsilon'])
+if __name__ == "__main__":
+    unittest.main(verbosity=3)

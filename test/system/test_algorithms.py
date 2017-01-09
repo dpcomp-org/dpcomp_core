@@ -52,18 +52,7 @@ class TestAlgorithm(TestCommon):
         self.assertEqual(self.expr_seed, E_dict['seed'])
         self.assertEqual(self.expr_eps, E_dict['epsilon'])
 
-    def test_AG_engine_noisy(self):
 
-        A = AG_noisy.AG_engine_Noisy(c=10, c2=5, alpha=.4, totalBudget=.02)     
-        E = experiment.Single(self.X2, 
-                              self.W2, 
-                              A, 
-                              epsilon=self.expr_eps, 
-                              seed=self.expr_seed).run()
-
-        E_dict = E.asDict()
-        self.assertEqual(self.expr_seed, E_dict['seed'])
-        self.assertEqual(self.expr_eps, E_dict['epsilon'])
     
     def test_identity(self):
         A = identity.identity_engine()
@@ -89,32 +78,8 @@ class TestAlgorithm(TestCommon):
         self.assertEqual(self.expr_seed, E_dict['seed'])
         self.assertEqual(self.expr_eps, E_dict['epsilon'])
 
-    def test_UG_noisy(self):
-        A = UG_noisy.UG_noisy_engine()
-        E = experiment.Single(self.X2, 
-                              self.W2, 
-                              A, 
-                              epsilon=self.expr_eps, 
-                              seed=self.expr_seed).run()
-
-        E_dict = E.asDict()
-        self.assertEqual(self.expr_seed, E_dict['seed'])
-        self.assertEqual(self.expr_eps, E_dict['epsilon'])
-
     def test_AG(self):
         A = AG.AG_engine()
-        E = experiment.Single(self.X2, 
-                              self.W2, 
-                              A, 
-                              epsilon=self.expr_eps, 
-                              seed=self.expr_seed).run()
-
-        E_dict = E.asDict()
-        self.assertEqual(self.expr_seed, E_dict['seed'])
-        self.assertEqual(self.expr_eps, E_dict['epsilon'])
-
-    def test_AG_noisy(self):
-        A = AG_noisy.AG_engine_Noisy() # TODO change name 
         E = experiment.Single(self.X2, 
                               self.W2, 
                               A, 
@@ -150,7 +115,7 @@ class TestAlgorithm(TestCommon):
         self.assertEqual(self.expr_eps, E_dict['epsilon'])
 
     def test_ahpND_1D(self):
-        A = ahpND.ahpND_engine()
+        A = ahp.ahpND_engine()
         E = experiment.Single(self.X1, 
                               self.W1, 
                               A, 
@@ -162,7 +127,7 @@ class TestAlgorithm(TestCommon):
         self.assertEqual(self.expr_eps, E_dict['epsilon'])
     
     def test_ahpND_2D(self):
-        A = ahpND.ahpND_engine()
+        A = ahp.ahpND_engine()
         E = experiment.Single(self.X2, 
                               self.W2, 
                               A, 
@@ -300,7 +265,7 @@ class TestAlgorithm(TestCommon):
 
     # use greedyH only, no partition engine used.
     def test_greedyH(self):
-        A = greedyH_only.greedyH_only_engine()
+        A = dawa.greedyH_only_engine()
         E = experiment.Single(self.X1, 
                               self.W1, 
                               A, 
@@ -324,7 +289,7 @@ class TestAlgorithm(TestCommon):
         self.assertEqual(self.expr_eps, E_dict['epsilon'])
 
     def test_dawa2D(self):
-        A = dawa2D.dawa2D_engine()
+        A = dawa.dawa2D_engine()
         E = experiment.Single(self.X2, 
                               self.W2, 
                               A, 
@@ -338,7 +303,7 @@ class TestAlgorithm(TestCommon):
 #Third party algorithms
 
     def test_StructureFirst(self):
-        A = thirdParty.StructureFirst_engine()
+        A = thirdparty.StructureFirst_engine()
         E = experiment.Single(self.X1, 
                               self.W1, 
                               A, 
@@ -348,7 +313,7 @@ class TestAlgorithm(TestCommon):
         self.assertEqual(self.expr_seed, E_dict['seed'])
         self.assertEqual(self.expr_eps, E_dict['epsilon'])    
     def test_EFPA(self):
-        A = thirdParty.efpa_engine()
+        A = thirdparty.efpa_engine()
         E = experiment.Single(self.X1, 
                               self.W1, 
                               A, 
@@ -358,7 +323,7 @@ class TestAlgorithm(TestCommon):
         self.assertEqual(self.expr_seed, E_dict['seed'])
         self.assertEqual(self.expr_eps, E_dict['epsilon'])    
     def test_PHP(self):
-        A = thirdParty.php_engine()
+        A = thirdparty.php_engine()
         E = experiment.Single(self.X1, 
                               self.W1, 
                               A, 
@@ -371,7 +336,7 @@ class TestAlgorithm(TestCommon):
 #Adaptive version of algorithms
 
     def test_AHP_ADP_1D(self):
-        A = ahpND.ahpND_adaptive_engine(index = 'DEFALUT1D')
+        A = ahp.ahpND_adaptive_engine(index = 'DEFALUT1D')
         E = experiment.Single(self.X1, 
                               self.W1, 
                               A, 
@@ -382,7 +347,7 @@ class TestAlgorithm(TestCommon):
         self.assertEqual(self.expr_eps, E_dict['epsilon'])
     
     def test_AHP_ADP_2D(self):
-        A = ahpND.ahpND_adaptive_engine(index = 'DEFALUT2D')
+        A = ahp.ahpND_adaptive_engine(index = 'DEFALUT2D')
         E = experiment.Single(self.X2, 
                               self.W2, 
                               A, 
@@ -413,3 +378,5 @@ class TestAlgorithm(TestCommon):
         E_dict = E.asDict()
         self.assertEqual(self.expr_seed, E_dict['seed'])
         self.assertEqual(self.expr_eps, E_dict['epsilon']) 
+if __name__ == "__main__":
+    unittest.main(verbosity=3)
