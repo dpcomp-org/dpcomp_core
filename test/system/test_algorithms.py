@@ -150,8 +150,8 @@ class TestAlgorithm(TestCommon):
         self.assertEqual(self.expr_seed, E_dict['seed'])
         self.assertEqual(self.expr_eps, E_dict['epsilon'])
 
-    def test_MyQuadTree(self):
-        A = MyQuadTree.MyQuadTree_engine()
+    def test_QuadTree(self):
+        A = QuadTree.QuadTree_engine()
         E = experiment.Single(self.X2, 
                               self.W2, 
                               A, 

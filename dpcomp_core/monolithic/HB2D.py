@@ -3,7 +3,13 @@ import math
 import numpy
 from dpcomp_core import util
 
-
+'''
+Canonical name:     HB (2D)
+Additional aliases: -
+Reference:          [W. Qardaji, W. Yang,and N. Li. Understanding hierarchical methods for differentially private histograms. PVLDB, 2013.](http://dl.acm.org/citation.cfm?id=2556576)
+Invocation:         dpcomp_core.monolithic.HB2D.HB2D_engine()
+Implementation:     DPComp team
+'''
 class HB2D_engine(estimate_engine.estimate_engine):
     '''Use hierarchical strategy from Hay PVLDB 2010 using branching from Qardaji PVLDB 2013.'''
     

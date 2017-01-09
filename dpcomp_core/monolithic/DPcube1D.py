@@ -5,7 +5,13 @@ import UG
 from dpcomp_core import util
 
 
-
+'''
+Canonical name:     DPCube (1D)
+Additional aliases: -
+Reference:          [Y. Xiao, L. Xiong, L. Fan, S. Goryczka, and H. Li. DPCube: Differentially private histogram release through multidimensional partitioning. Transactions of Data Privacy, 2014.](http://dl.acm.org/citation.cfm?id=2870615)
+Invocation:         dpcomp_core.monolithic.DPcube1D.DPcube1D_engine()
+Implementation:     DPComp team
+'''
 class DPcube1D_engine(estimate_engine.estimate_engine):
     """ Estimate a 2D dataset by using dpcube method """
 

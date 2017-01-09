@@ -11,7 +11,13 @@ class uniform_engine(estimate_engine):
     def Run(self, Q, x, epsilon, seed=None):
         return numpy.ones_like(x,dtype=numpy.float32) * x.sum() / x.size # assuming m is known
 
-
+'''
+Canonical name:     Uniform
+Additional aliases: UniformNoisy
+Reference:          -
+Invocation:         dpcomp_core.monolithic.uniform.uniform_noisy_engine()
+Implementation:     DPComp team
+'''
 class uniform_noisy_engine(estimate_engine):
     """Estimate a dataset by assuming it is uniform over the domain; total number of records derived privately according to epsilon."""
 

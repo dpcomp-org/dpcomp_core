@@ -3,7 +3,13 @@ import numpy
 import estimate_engine
 from dpcomp_core import util
 
-
+'''
+Canonical name:     UGrid (2D)
+Additional aliases: UG
+Reference:          [W. Qardaji, W. Yang, and N. Li. Differentially private grids for geospatial data. ICDE, 2013.](http://dl.acm.org/citation.cfm?id=2510649.2511274)
+Invocation:         dpcomp_core.monolithic.UG.UG_engine()
+Implementation:     DPComp team
+'''
 class UG_engine(estimate_engine.estimate_engine):
     
     """ Estimate a 2D dataset by using uniform grids. """

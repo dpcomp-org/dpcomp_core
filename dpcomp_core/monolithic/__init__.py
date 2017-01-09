@@ -14,7 +14,7 @@ import HB
 import HB2D
 import identity
 import HybridTree
-import MyQuadTree
+import QuadTree
 import mwemND
 import privelet
 import privelet2D

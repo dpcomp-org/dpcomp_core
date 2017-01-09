@@ -7,6 +7,13 @@ import greedyH
 import numpy
 import math
 
+'''
+Canonical name:     DAWA (1D)
+Additional aliases: -
+Reference:          [C. Li, M. Hay, and G. Miklau. A data- and workload-aware algorithm for range queries under differential privacy. PVLDB, 2014.](http://dl.acm.org/citation.cfm?id=2732271) 
+Invocation:         dpcomp_core.monolithic.dawa.dawa_engine()
+Implementation:     DPComp team
+'''
 class dawa_engine(routine_engine.transform_engine_qtqmatrix, Marshallable):
     """ Estimate a 1D dataset by using adaptive grids. """
 
@@ -29,6 +36,13 @@ class dawa_engine(routine_engine.transform_engine_qtqmatrix, Marshallable):
 
         return super(type(self),self).Run(Q, x, epsilon, seed)
 
+'''
+Canonical name:     DAWA (2D)
+Additional aliases: -
+Reference:          [C. Li, M. Hay, and G. Miklau. A data- and workload-aware algorithm for range queries under differential privacy. PVLDB, 2014.](http://dl.acm.org/citation.cfm?id=2732271) 
+Invocation:         dpcomp_core.monolithic.dawa.dawa2D_engine()
+Implementation:     DPComp team
+'''
 class dawa2D_engine(routine_engine.transform_engine_qtqmatrix_linear, Marshallable):
     """Estimate a 2D dataset by using DAWA on a 1d transform of 2d. """
 
@@ -84,6 +98,13 @@ class dawa2D_engine(routine_engine.transform_engine_qtqmatrix_linear, Marshallab
         return hatx2d
 
 # running only with greedyH as estimate engine, no partition engine used
+'''
+Canonical name:     Greedy H (1D)
+Additional aliases: greedyH
+Reference:          [C. Li, M. Hay, and G. Miklau. A data- and workload-aware algorithm for range queries under differential privacy. PVLDB, 2014.](http://dl.acm.org/citation.cfm?id=2732271) 
+Invocation:         dpcomp_core.monolithic.dawa.greedyH_only_engine()
+Implementation:     DPComp team
+'''
 class greedyH_only_engine(routine_engine.transform_engine_qtqmatrix, Marshallable):
     """ Estimate a 2D dataset by using adaptive grids. """
 

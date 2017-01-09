@@ -100,7 +100,13 @@ class mwemND_simple_engine(estimate_engine.estimate_engine):
         hatx *= total / hatx.sum()     
         return hatx
 
-####MWEM ND engine
+'''
+Canonical name:     MWEM (ND)
+Additional aliases: -
+Reference:          [M. Hardt, K. Ligett, and F. McSherry. A simple and practical algorithm for differentially private data release. NIPS, 2012.](http://dl.acm.org/citation.cfm?id=2999325.2999396)
+Invocation:         dpcomp_core.monolithic.mwemND.mwemND_engine()
+Implementation:     DPComp team
+'''
 class mwemND_engine(mwemND_simple_engine):
     """MWEM engine with Frank's enhanced update method."""
 
@@ -162,7 +168,13 @@ class mwemND_engine(mwemND_simple_engine):
 
         return hatx
 
-####MWEM ND adaptive engine
+'''
+Canonical name:     MWEM* (ND)
+Additional aliases: MWEM_ADP
+Reference:          -
+Invocation:         dpcomp_core.monolithic.mwemND.mwemND_adaptive_engine()
+Implementation:     DPComp team
+'''
 class mwemND_adaptive_engine(estimate_engine.estimate_engine):
     """Adaptive MWEM engine"""
 

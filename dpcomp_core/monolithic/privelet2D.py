@@ -3,7 +3,13 @@ import numpy
 import estimate_engine
 from dpcomp_core import util
 
-
+'''
+Canonical name:     Privelet (2D)
+Additional aliases: -
+Reference:          [ X. Xiao, G. Wang, and J. Gehrke. Differential privacy via wavelet transforms. ICDE, 2010.](http://dl.acm.org/citation.cfm?id=2007020)
+invocation:         dpcomp_core.monolithic.privelet2D.privelet2D_engine()
+Implementation:     DPComp team
+'''
 class privelet2D_engine(estimate_engine.estimate_engine):
     """ Estimate a 2D dataset by using wavelet transformation """
     

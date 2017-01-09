@@ -5,7 +5,13 @@ from dpcomp_core import util
 import estimate_engine
 
 
-
+'''
+Canonical name:     HB (1D)
+Additional aliases: -
+Reference:          [W. Qardaji, W. Yang,and N. Li. Understanding hierarchical methods for differentially private histograms. PVLDB, 2013.](http://dl.acm.org/citation.cfm?id=2556576)
+Invocation:         dpcomp_core.monolithic.HB.HB_engine()
+Implementation:     DPComp team
+'''
 class HB_engine(estimate_engine.estimate_engine):
     '''
     Use hierarchical strategy from Hay PVLDB 2010 using 
@@ -26,7 +32,13 @@ class HB_engine(estimate_engine.estimate_engine):
         b = find_best_branching(N)
         return np.array(build_tree(x, epsilon,prng, b))
 
-
+'''
+Canonical name:     H (1D)
+Additional aliases: Hierarchical
+Reference:          [M. Hay,V. Rastogi,G. Miklau,and D. Suciu. Boosting the accuracy of differentially private histograms through consistency. PVLDB, 2010.](http://dl.acm.org/citation.cfm?id=1920970)
+Invocation:         dpcomp_core.monolithic.HB.H2_engine()
+Implementation:     DPComp team
+'''
 class H2_engine(estimate_engine.estimate_engine):
     '''
     Use hierarchical strategy from Hay PVLDB 2010 using 
