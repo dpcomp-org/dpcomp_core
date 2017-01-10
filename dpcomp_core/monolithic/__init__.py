@@ -2,8 +2,6 @@ from dpcomp_core.mixins import Marshallable
 from dpcomp_core import util
 import hashlib
 
-import thirdparty
-
 import AG
 import ahp
 import DPcube1D
@@ -19,6 +17,7 @@ import mwemND
 import privelet
 import privelet2D
 import QuadTree
+import thirdparty
 import UG
 import uniform
 
