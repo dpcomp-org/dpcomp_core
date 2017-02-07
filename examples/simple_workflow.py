@@ -32,7 +32,7 @@ ds_seeds = range(2)
 
 ## workload specification. 2 workloads: 1D x 1, 2D x 1
 workloads = {1: [workload.Prefix1D],
-             2: [workload.SmallRandomRange]}
+             2: [workload.RandomRange]}
 query_sizes = [2000]
 
 ## privacy level epsilon 
