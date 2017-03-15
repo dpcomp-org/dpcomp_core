@@ -2,9 +2,15 @@ import os
 import unittest
 from dpcomp_core import util
 
-LOG_PATH = os.environ['DPCOMP_LOG_PATH']
-LOG_LEVEL = os.environ['DPCOMP_LOG_LEVEL']
+try:
+    LOG_PATH = os.environ['DPCOMP_LOG_PATH']
+except KeyError as e:
+    raise RuntimeError("DPCOMP_LOG_PATH environment variable not set.")
 
+try:
+    LOG_LEVEL = os.environ['DPCOMP_LOG_LEVEL']
+except KeyError as e:
+    raise RuntimeError("DPCOMP_LOG_LEVEL environment variable not set.")
 
 class TestCommon(unittest.TestCase):
 
