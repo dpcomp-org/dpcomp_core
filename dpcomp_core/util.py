@@ -5,10 +5,12 @@ import inspect
 import json
 import logging
 import numpy as np
+from past.builtins import str as old_str
+from past.builtins import unicode
 import past.utils
 import sys
 
-PRIMITIVES = (int, float, str, bool, int, str, type(None))
+PRIMITIVES = (int, float, str, bool, int, str, old_str, unicode, type(None))
 
 
 def old_div(x, y):

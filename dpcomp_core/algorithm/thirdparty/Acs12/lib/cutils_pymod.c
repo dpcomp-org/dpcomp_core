@@ -184,6 +184,7 @@ PyMODINIT_FUNC PyInit_cutils(void)
 #else
 
 #define GETSTATE(m) (&_state)
+static struct module_state _state;
 
 void
 initcutils(void)
