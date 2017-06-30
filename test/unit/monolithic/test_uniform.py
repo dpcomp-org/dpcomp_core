@@ -1,9 +1,12 @@
 """Unit test for uniform.py"""
+from __future__ import division
 
+from builtins import range
 import numpy
 from dpcomp_core.algorithm import uniform 
 from dpcomp_core import workload 
 from dpcomp_core import dataset
+from dpcomp_core import util
 import unittest
 
 class PriveletTests(unittest.TestCase):
@@ -12,10 +15,10 @@ class PriveletTests(unittest.TestCase):
     def setUp(self):
         n = 1024
         scale = 1E5
-        self.hist = numpy.array( range(n))
+        self.hist = numpy.array( list(range(n)))
         self.d = dataset.Dataset(self.hist, None)
         self.dist = numpy.random.exponential(1,n)
-        self.dist = self.dist / float(self.dist.sum())
+        self.dist = util.old_div(self.dist, float(self.dist.sum()))
     
         self.epsilon = 0.1
         self.w1 = workload.Identity.oneD(1024 , weight=1.0)

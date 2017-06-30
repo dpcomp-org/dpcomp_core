@@ -1,8 +1,11 @@
 """Classes of MWEM engines. mwemND_engine is the MWEM we are using, works for 1 and 1+ dimension. Also the adaptive version. """
+from __future__ import division
+from __future__ import absolute_import
+from builtins import range
 import math
 import numpy
 import logging
-import estimate_engine
+from . import estimate_engine
 from dpcomp_core import util
 
 
@@ -30,7 +33,7 @@ class mwemND_simple_engine(estimate_engine.estimate_engine):
         # here we assume the total count is known
         # create uniform estimate based on total count
         hatx = numpy.empty_like(x)
-        hatx.fill( x.sum() / float(x.size) )
+        hatx.fill( util.old_div(x.sum(), float(x.size)) )
 
         selepsilon = epsilon * self._ratio
         queryepsilon = epsilon - selepsilon
@@ -40,7 +43,7 @@ class mwemND_simple_engine(estimate_engine.estimate_engine):
         estQ = []
         nrounds = self._nrounds
         for c in range(nrounds):
-            i = self._exponentialMechanism(x, hatx, Q1, selepsilon / nrounds ,prng)   # get index of selected query
+            i = self._exponentialMechanism(x, hatx, Q1, util.old_div(selepsilon, nrounds) ,prng)   # get index of selected query
             q = Q1[i]
             del Q1[i]    # no longer a candidate in next round
             sens=q.sens()
@@ -94,7 +97,7 @@ class mwemND_simple_engine(estimate_engine.estimate_engine):
         q1 = q.asArray(hatx.shape) # transform a query object into a nd array
         
         hatx = hatx * numpy.exp( q1 * error / (2.0 * total) )
-        hatx *= total / hatx.sum()     
+        hatx *= util.old_div(total, hatx.sum())     
         return hatx
 
 '''
@@ -138,7 +141,7 @@ class mwemND_engine(mwemND_simple_engine):
         # create uniform estimate based on total count
         hatx = numpy.empty_like(x,dtype='float64')
         #Note x is a histogram, type int. hatx is distribution, type float
-        hatx.fill( x.sum() / float(x.size) )
+        hatx.fill( util.old_div(x.sum(), float(x.size)) )
 
         Q1=list(Q.query_list)# leave Q as it is for future evaluation 
 
@@ -150,7 +153,7 @@ class mwemND_engine(mwemND_simple_engine):
         estQ = []
         nrounds = self._nrounds
         for c in range(nrounds):
-            i = self._exponentialMechanism(x, hatx, Q1, selepsilon / nrounds ,prng)  # get index of selected query
+            i = self._exponentialMechanism(x, hatx, Q1, util.old_div(selepsilon, nrounds) ,prng)  # get index of selected query
             q = Q1[i]
 
             sens=q.sens()

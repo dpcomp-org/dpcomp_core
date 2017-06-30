@@ -1,3 +1,4 @@
+from builtins import object
 from collections import defaultdict
 from dpcomp_core import cartesian_product as cp
 import json
@@ -44,7 +45,7 @@ class ListWriter(object):
 
 
 def process_experiments(params_map, writer, procs=1):
-    for config_hash, params_list in params_map.iteritems():
+    for config_hash, params_list in params_map.items():
         group_metrics = [cp.run(params) for params in params_list]
 
         writer.write(group_metrics)

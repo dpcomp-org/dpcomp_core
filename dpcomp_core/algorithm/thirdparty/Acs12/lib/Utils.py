@@ -2,25 +2,30 @@
 Created on 16 juin 2011
 
 '''
+from __future__ import division
 
+from builtins import map
+from builtins import range
 import math
 import random as rnd
 import numpy as np
 import scipy.fftpack
 import cmath
+from functools import reduce
+from dpcomp_core import util
 
 def KL_div(p, q):
     s = 0
     for i in range(len(p)):
         if p[i] > 0:
-            s += p[i] * math.log(float(p[i]) / q[i])
+            s += p[i] * math.log(util.old_div(float(p[i]), q[i]))
     return s
 
 def l2norm(values):
     return math.sqrt(reduce(lambda x,y: x + abs(y)**2, values))
 
 def sanitize(hist):
-    return map(lambda x: max(1, x), hist)
+    return [max(1, x) for x in hist]
 
 def is_int(s):
     try:
@@ -41,7 +46,7 @@ def laplace(p_lambda):
 
 def normalize(vec):
     s = sum(vec)
-    return  vec if s <= 0 else map((lambda x: x/float(s)), vec)
+    return  vec if s <= 0 else list(map((lambda x: util.old_div(x,float(s))), vec))
 
 def stat_dist(d1, d2):
     return sum( (abs(d1[i] - d2[i]) for i in range(len(d1))) )

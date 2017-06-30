@@ -1,4 +1,6 @@
-from estimate_engine import estimate_engine
+from __future__ import division
+from __future__ import absolute_import
+from .estimate_engine import estimate_engine
 import numpy
 from dpcomp_core import util
 
@@ -31,5 +33,5 @@ class uniform_noisy_engine(estimate_engine):
 
         prng = numpy.random.RandomState(seed)
 
-        m = x.sum() + prng.laplace(0.0, 1.0 / epsilon, 1)
+        m = x.sum() + prng.laplace(0.0, util.old_div(1.0, epsilon), 1)
         return numpy.ones_like(x,dtype=numpy.float32) * m / x.size # assuming m is known

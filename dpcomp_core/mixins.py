@@ -1,3 +1,4 @@
+from builtins import object
 from collections import defaultdict
 from dpcomp_core import util
 

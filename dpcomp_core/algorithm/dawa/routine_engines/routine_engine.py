@@ -1,4 +1,8 @@
 """General engine for Data- and Workload-Aware algorithms."""
+from __future__ import division
+from builtins import str
+from builtins import range
+from builtins import object
 import bisect
 import itertools
 import numpy
@@ -44,10 +48,10 @@ class routine_engine(object):
         Uniqueness of this hash relies on subclasses writing init parameters as instance variables
         """
         m = hashlib.sha1()
-        m.update(self.__class__.__name__)
-        m.update(self._estimate_engine.__class__.__name__)
-        m.update(self._partition_engine.__class__.__name__)
-        m.update(str(util.standardize(sorted(self.init_params.items()))))
+        m.update(util.prepare_for_hash(self.__class__.__name__))
+        m.update(util.prepare_for_hash(self._estimate_engine.__class__.__name__))
+        m.update(util.prepare_for_hash(self._partition_engine.__class__.__name__))
+        m.update(util.prepare_for_hash(str(util.standardize(sorted(self.init_params.items())))))
         return m.hexdigest()
 
     def Run(self, Q, x, epsilon,seed):
@@ -79,7 +83,7 @@ class routine_engine(object):
             assert max(itertools.chain(*partition)) == (n-1)
 
             eps2 = (1-self._ratio) * epsilon   # this is epsilon_2 used in paper (the epsilon for estimation)
-            devs = abs( numpy.array(x) - (sum(x) / float(len(x))) )
+            devs = abs( numpy.array(x) - (util.old_div(sum(x), float(len(x)))) )
 
             counts = self._estimate_engine.Run(
                         self._workload_reform(Q, partition, n),
@@ -119,7 +123,7 @@ class routine_engine(object):
         n2 = len(counts)
         for c in range(n2):
             lb, rb = partition[c]
-            estx[lb:(rb+1)] = counts[c] / float(rb - lb + 1)
+            estx[lb:(rb+1)] = util.old_div(counts[c], float(rb - lb + 1))
 
         return estx
 
@@ -208,7 +212,7 @@ class transform_engine_qtqmatrix(routine_engine):
         else:
             max_block_size = self._max_block_size
 
-        cnum = range(0, len(Q0), max_block_size)
+        cnum = list(range(0, len(Q0), max_block_size))
 
         for c0 in cnum:
             nrow = min(len(Q0)-c0, max_block_size)

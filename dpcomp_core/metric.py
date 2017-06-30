@@ -1,3 +1,4 @@
+from __future__ import division
 from dpcomp_core.mixins import Cacheable
 import hashlib
 from dpcomp_core.mixins import Marshallable
@@ -39,8 +40,8 @@ class Metric(Marshallable, Cacheable):
     def hash(self):
         m = hashlib.sha1()
 
-        m.update(self.__class__.__name__)
-        m.update(self.E.hash)
+        m.update(util.prepare_for_hash(self.__class__.__name__))
+        m.update(util.prepare_for_hash(self.E.hash))
 
         return m.hexdigest()
 
@@ -90,9 +91,9 @@ def calculate_error(prefix, diff, norm_factor):
     """
     assert len(diff) == diff.size, 'diff should be a vector'
     d = {}
-    d[prefix + '.Linf'] = la.norm(diff, np.inf) / norm_factor       #
-    d[prefix + '.L1'] = (la.norm(diff,1) / float(diff.size)) / norm_factor
-    d[prefix + '.L2'] = (la.norm(diff) / float(diff.size)) / norm_factor
+    d[prefix + '.Linf'] = util.old_div(la.norm(diff, np.inf), norm_factor)       #
+    d[prefix + '.L1'] = util.old_div((util.old_div(la.norm(diff,1), float(diff.size))), norm_factor)
+    d[prefix + '.L2'] = util.old_div((util.old_div(la.norm(diff), float(diff.size))), norm_factor)
     return d
 
 

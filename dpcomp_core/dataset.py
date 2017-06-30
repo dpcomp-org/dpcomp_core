@@ -1,8 +1,12 @@
+from __future__ import division
+from builtins import zip
+from builtins import range
 import hashlib
 import os
 import numpy
 from dpcomp_core import util
 from dpcomp_core.mixins import Marshallable
+from functools import reduce
 
 # short cuts for dataset names, filenames
 filenameDict = {
@@ -124,7 +128,7 @@ class Dataset(Marshallable):
     @property
     def fractionZeros(self):
         zero_count = (self.payload == 0).sum()
-        return float(zero_count) / self.payload.size
+        return util.old_div(float(zero_count), self.payload.size)
 
     @property
     def maxCount(self):
@@ -138,10 +142,10 @@ class Dataset(Marshallable):
     @property
     def hash(self):
         m = hashlib.sha1()
-        m.update(self.__class__.__name__)
-        m.update(numpy.array(self._hist))
-        m.update(numpy.array(self._reduce_to_domain_shape))
-        m.update(self._dist_str)
+        m.update(util.prepare_for_hash(self.__class__.__name__))
+        m.update(util.prepare_for_hash(numpy.array(self._hist)))
+        m.update(util.prepare_for_hash(numpy.array(self._reduce_to_domain_shape)))
+        m.update(util.prepare_for_hash(self._dist_str))
         return m.hexdigest()
 
     # represent object state as dict (for storage in datastore)
@@ -181,7 +185,7 @@ class DatasetSampledFromFile(DatasetSampled):
         self.fname = nickname
         assert nickname in filenameDict, 'Filename parameter not recognized: %s' % nickname
         hist = load(filenameDict[self.fname])
-        dist = hist / float(hist.sum())
+        dist = util.old_div(hist, float(hist.sum()))
         super(DatasetSampledFromFile,self).__init__(dist, sample_to_scale, reduce_to_dom_shape, seed)
 
 
@@ -272,7 +276,7 @@ def partition_grid(domain_shape, grid_shape):
         """
         x = numpy.array(idx)
         y = numpy.array(grid_shape)
-        return general_pairing( x/y )  # broadcasting integer division
+        return general_pairing( util.old_div(x,y) )  # broadcasting integer division
 
     h = numpy.vectorize(g)
 

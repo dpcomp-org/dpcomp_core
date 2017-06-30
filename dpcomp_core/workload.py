@@ -1,3 +1,6 @@
+from builtins import str
+from builtins import zip
+from builtins import range
 import copy
 import hashlib
 import itertools
@@ -82,7 +85,7 @@ class Identity(Workload):
         self.weight = weight
         self.pretty_name = pretty_name
 
-        indexes = itertools.product(*[range(i) for i in domain_shape])   # generate index tuples
+        indexes = itertools.product(*[list(range(i)) for i in domain_shape])   # generate index tuples
         queries = [ndRangeUnion().addRange(i,i,weight) for i in indexes]
         super(self.__class__,self).__init__(queries, domain_shape)
 
@@ -93,9 +96,9 @@ class Identity(Workload):
     @property
     def hash(self):
         m = hashlib.sha1()
-        m.update(self.__class__.__name__)
-        m.update(str(self.weight))
-        m.update(str(util.standardize(self.domain_shape)))
+        m.update(util.prepare_for_hash(self.__class__.__name__))
+        m.update(util.prepare_for_hash(str(self.weight)))
+        m.update(util.prepare_for_hash(str(util.standardize(self.domain_shape))))
         return m.hexdigest()
 
 
@@ -120,8 +123,8 @@ class Prefix1D(Workload):
     @property
     def hash(self):
         m = hashlib.sha1()
-        m.update(self.__class__.__name__)
-        m.update(str(util.standardize(self.domain_shape)))
+        m.update(util.prepare_for_hash(self.__class__.__name__))
+        m.update(util.prepare_for_hash(str(util.standardize(self.domain_shape))))
         return m.hexdigest()
 
 
@@ -149,17 +152,17 @@ class RandomRange(Workload):
             shapes = itertools.cycle(self.shape_list) # infinite iterable over shapes in shape_list
         queries = []
         for i in range(size):
-            lb, ub = placeRandomly(shapes.next(), domain_shape, prng)       # seed must be None or repeats
+            lb, ub = placeRandomly(next(shapes), domain_shape, prng)       # seed must be None or repeats
             queries.append( ndRangeUnion().addRange(lb,ub,1.0) )
         super(RandomRange,self).__init__(queries, domain_shape)
 
     @property
     def hash(self):
         m = hashlib.sha1()
-        m.update(self.__class__.__name__)
-        m.update(str(self._size))
-        m.update(str(util.standardize(self.shape_list)))
-        m.update(str(util.standardize(self.domain_shape)))
+        m.update(util.prepare_for_hash(self.__class__.__name__))
+        m.update(util.prepare_for_hash(str(self._size)))
+        m.update(util.prepare_for_hash(str(util.standardize(self.shape_list))))
+        m.update(util.prepare_for_hash(str(util.standardize(self.domain_shape))))
         return m.hexdigest()
 
     @classmethod

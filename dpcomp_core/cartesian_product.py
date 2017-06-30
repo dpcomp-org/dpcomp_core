@@ -46,12 +46,12 @@ def M(experiment):
 
 def config_hash(params):
     h = hashlib.sha1()
-    h.update(params['nickname'])
-    h.update(repr(params['dimension']))
-    h.update(repr(params['epsilon']))
-    h.update(repr(params['scale']))
-    h.update(repr(params['domain']))
-    h.update(repr(params['query_size']))
+    h.update(util.prepare_for_hash(params['nickname']))
+    h.update(util.prepare_for_hash(repr(params['dimension'])))
+    h.update(util.prepare_for_hash(repr(params['epsilon'])))
+    h.update(util.prepare_for_hash(repr(params['scale'])))
+    h.update(util.prepare_for_hash(repr(params['domain'])))
+    h.update(util.prepare_for_hash(repr(params['query_size'])))
     h.update(params['algorithm'].hash)
 
     return h.hexdigest()
@@ -67,7 +67,7 @@ def cartesian_product(exp_seed,
                       data_seed=0):
     params_list = []
 
-    for nickname, dim in nickname_map.items():
+    for nickname, dim in list(nickname_map.items()):
         for epsilon in epsilons:
             for scale in scales[dim]:
                 for domain in domain_map[dim]:

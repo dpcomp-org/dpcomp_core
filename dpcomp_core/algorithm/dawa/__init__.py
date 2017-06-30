@@ -1,9 +1,12 @@
+from __future__ import division
+from __future__ import absolute_import
+from builtins import range
 from dpcomp_core.algorithm import estimate_engine
-from partition_engines import l1partition
-from routine_engines import routine_engine
+from .partition_engines import l1partition
+from .routine_engines import routine_engine
 from dpcomp_core.mixins import Marshallable
 from dpcomp_core import util
-import greedyH
+from . import greedyH
 import numpy
 import math
 
@@ -141,8 +144,8 @@ def hilbert(N):
     if N==2:
         return  numpy.array((0, 0, 1, 1)), numpy.array((0, 1, 1, 0))
     else:
-        x, y = hilbert(N/2)
-        xl = numpy.r_[y, x,     N/2+x, N-1-y  ]
-        yl = numpy.r_[x, N/2+y, N/2+y, N/2-1-x]
+        x, y = hilbert(util.old_div(N,2))
+        xl = numpy.r_[y, x,     util.old_div(N,2)+x, N-1-y  ]
+        yl = numpy.r_[x, util.old_div(N,2)+y, util.old_div(N,2)+y, util.old_div(N,2)-1-x]
         return xl, yl
 

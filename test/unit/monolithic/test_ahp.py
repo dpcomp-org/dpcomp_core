@@ -1,5 +1,6 @@
 """Unit test for ahp.py"""
 
+from builtins import range
 import numpy
 from dpcomp_core.algorithm import ahp
 from dpcomp_core import workload 
@@ -11,7 +12,7 @@ class AHPTests(unittest.TestCase):
 
     def setUp(self):
         n = 1024
-        self.hist = numpy.array( range(n))
+        self.hist = numpy.array( list(range(n)))
         self.d = dataset.Dataset(self.hist, None)
     
         self.epsilon = 0.1

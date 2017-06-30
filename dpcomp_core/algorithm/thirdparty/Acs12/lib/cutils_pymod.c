@@ -19,6 +19,11 @@
         PyObject_HEAD_INIT(type) size,
 #endif
 
+struct module_state {
+    PyObject *error;
+};
+
+
 /* ========================================================================== */
 /* -- Methods --------------------------------------------------------------- */
 /* ========================================================================== */
@@ -133,16 +138,67 @@ static struct PyMethodDef cutils_methods[] = {
 /* ========================================================================== */
 
 
+/**** Python3 Initialization ****/
+#if PY_MAJOR_VERSION >= 3
+
+#define GETSTATE(m) ((struct module_state*)PyModule_GetState(m))
+
+static int cutils_traverse(PyObject *m, visitproc visit, void *arg) {
+    Py_VISIT(GETSTATE(m)->error);
+    return 0;
+}
+static int cutils_clear(PyObject *m) {
+    Py_CLEAR(GETSTATE(m)->error);
+    return 0;
+}
+static struct PyModuleDef moduledef = {
+        PyModuleDef_HEAD_INIT,
+        "cutils",
+        NULL,
+        sizeof(struct module_state),
+        cutils_methods,
+        NULL,
+        cutils_traverse,
+        cutils_clear,
+        NULL
+};
+
+PyMODINIT_FUNC PyInit_cutils(void)
+{
+    PyObject *m = PyModule_Create(&moduledef);
+
+    if (m == NULL)
+        return NULL;
+    struct module_state *st = GETSTATE(m);
+
+    st->error = PyErr_NewException("cutils.error", NULL, NULL);
+    if (st->error == NULL) {
+        Py_DECREF(m);
+        return NULL;
+    }
+
+    return m;
+}
+
+/**** Python 2 initialization ****/
+#else
+
+#define GETSTATE(m) (&_state)
+
 void
 initcutils(void)
 {
-    PyObject *m;
+    PyObject *m = Py_InitModule("cutils", cutils_methods);
 
-    m = Py_InitModule("cutils", cutils_methods);
     if (m == NULL)
         return;
+    struct module_state *st = GETSTATE(m);
 
-    PyObject* cutils_error = PyErr_NewException("cutils.error", NULL, NULL);
-    Py_INCREF(cutils_error);
-    PyModule_AddObject(m, "error", cutils_error);
+    st->error = PyErr_NewException("cutils.error", NULL, NULL);
+    if (st->error == NULL) {
+        Py_DECREF(m);
+        return;
+    }
 }
+
+#endif

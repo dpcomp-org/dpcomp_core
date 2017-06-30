@@ -1,3 +1,4 @@
+from builtins import range
 import numpy
 from dpcomp_core.workload import *
 import unittest
@@ -11,7 +12,7 @@ class WorkloadTests(unittest.TestCase):
         self.oneDint = self.oneD[0]
         self.twoD = (self.n_sqrt,self.n_sqrt)
 
-        self.x_range = numpy.array( range(self.n_sqrt * self.n_sqrt) )
+        self.x_range = numpy.array( list(range(self.n_sqrt * self.n_sqrt)) )
         self.x_ones = numpy.ones_like(self.x_range)
         self.x_zeros = numpy.zeros_like(self.x_range)
 

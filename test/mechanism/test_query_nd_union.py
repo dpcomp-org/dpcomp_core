@@ -1,6 +1,7 @@
 
 """Unit test for query_nd_union.py"""
 
+from builtins import zip
 import os, sys, time, numpy as np
 sys.path.append('..')
 

@@ -1,13 +1,14 @@
+from __future__ import absolute_import
 import math
 from dpcomp_core import util
 from dpcomp_core.algorithm import estimate_engine
 import numpy
 # import the wrapped mean strcture first code
-from xiaokui import structFirst
+from .xiaokui import structFirst
 
 # import Acs12 lib
-from Acs12.lib import EFPA
-from Acs12.lib import Clustering
+from .Acs12.lib import EFPA
+from .Acs12.lib import Clustering
 '''
 Canonical name:     StructureFirst (1D)
 Additional aliases: SF

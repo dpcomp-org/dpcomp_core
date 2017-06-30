@@ -1,6 +1,7 @@
 """Classes of partition engines."""
 
 
+from builtins import object
 class partition_engine(object):
 	"""The template class for partition engines."""
 

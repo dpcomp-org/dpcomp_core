@@ -1,6 +1,9 @@
+from __future__ import division
+from __future__ import absolute_import
+from builtins import range
 import math
 import numpy
-import estimate_engine
+from . import estimate_engine
 from dpcomp_core import util
 
 '''
@@ -23,7 +26,7 @@ class privelet2D_engine(estimate_engine.estimate_engine):
         n = len(t)
         for c in range(m):
             y[:n] = numpy.hstack([y[:n][0::2] + y[:n][1::2],y[:n][0::2]-y[:n][1::2]])
-            n = n / 2
+            n = util.old_div(n, 2)
         
         return y
     
@@ -33,7 +36,7 @@ class privelet2D_engine(estimate_engine.estimate_engine):
         n = 2
         half_n = 1
         for c in range(m):
-            y[:n:2],y[1:n:2] = (y[:half_n] + y[half_n:n])/2.0 , (y[:half_n] - y[half_n:n])/2.0
+            y[:n:2],y[1:n:2] = util.old_div((y[:half_n] + y[half_n:n]),2.0) , util.old_div((y[:half_n] - y[half_n:n]),2.0)
             n = n * 2
             half_n = half_n * 2
         

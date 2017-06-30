@@ -1,6 +1,9 @@
+from __future__ import division
+from __future__ import absolute_import
+from builtins import range
 import numpy
-import estimate_engine
-import UG
+from . import estimate_engine
+from . import UG
 from dpcomp_core import util
 
 '''
@@ -68,7 +71,7 @@ class DPcube_engine(estimate_engine.estimate_engine):
         
         if len0 > len1:
             bias = DPcube_engine.Compute(p,pp,x0,y0,x1,y1)
-            cur = bias + 1.0/epsilon
+            cur = bias + util.old_div(1.0,epsilon)
             flag = False
             pos = x0
             
@@ -76,8 +79,8 @@ class DPcube_engine(estimate_engine.estimate_engine):
                 bias1 = DPcube_engine.Compute(p,pp,x0,y0,k,y1)
                 bias2 = DPcube_engine.Compute(p,pp,k+1,y0,x1,y1)
                 
-                if bias1 + bias2 + 2.0 / epsilon < cur:
-                    cur = bias1 + bias2 + 2.0/epsilon
+                if bias1 + bias2 + util.old_div(2.0, epsilon) < cur:
+                    cur = bias1 + bias2 + util.old_div(2.0,epsilon)
                     flag = True
                     pos = k
         
@@ -85,7 +88,7 @@ class DPcube_engine(estimate_engine.estimate_engine):
                 DPcube_engine.dpcube(epsilon,p,pp,rp,X2,(x0,y0),(pos,y1),prng)
                 DPcube_engine.dpcube(epsilon,p,pp,rp,X2,(pos+1,y0),(x1,y1),prng)
             else:
-                ncnt = rp[x1+1][y1+1] + rp[x0][y0] - rp[x0][y1+1] - rp[x1+1][y0] + prng.laplace(0.0,1.0/epsilon)
+                ncnt = rp[x1+1][y1+1] + rp[x0][y0] - rp[x0][y1+1] - rp[x1+1][y0] + prng.laplace(0.0,util.old_div(1.0,epsilon))
                 navg = ncnt * 1.0 / (len0*len1)
                 
                 for i in range(x0,x1+1):
@@ -93,7 +96,7 @@ class DPcube_engine(estimate_engine.estimate_engine):
                     
         else:
             bias = DPcube_engine.Compute(p,pp,x0,y0,x1,y1)
-            cur = bias + 1.0/epsilon
+            cur = bias + util.old_div(1.0,epsilon)
             flag = False
             pos = y0
                     
@@ -101,8 +104,8 @@ class DPcube_engine(estimate_engine.estimate_engine):
                 bias1 = DPcube_engine.Compute(p,pp,x0,y0,x1,k)
                 bias2 = DPcube_engine.Compute(p,pp,x0,k+1,x1,y1)
                                 
-                if bias1 + bias2 + 2.0/epsilon < cur:
-                    cur = bias1 + bias2 + 2.0/epsilon
+                if bias1 + bias2 + util.old_div(2.0,epsilon) < cur:
+                    cur = bias1 + bias2 + util.old_div(2.0,epsilon)
                     flag = True
                     pos = k
                                                 
@@ -110,7 +113,7 @@ class DPcube_engine(estimate_engine.estimate_engine):
                 DPcube_engine.dpcube(epsilon,p,pp,rp,X2,(x0,y0),(x1,pos),prng)
                 DPcube_engine.dpcube(epsilon,p,pp,rp,X2,(x0,pos+1),(x1,y1),prng)
             else:
-                ncnt = rp[x1+1][y1+1] + rp[x0][y0] - rp[x0][y1+1] - rp[x1+1][y0] + prng.laplace(0.0,1.0/epsilon)
+                ncnt = rp[x1+1][y1+1] + rp[x0][y0] - rp[x0][y1+1] - rp[x1+1][y0] + prng.laplace(0.0,util.old_div(1.0,epsilon))
                 navg = ncnt * 1.0 / (len0*len1)
                                                                         
                 for i in range(x0,x1+1):

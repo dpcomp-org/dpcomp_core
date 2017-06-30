@@ -1,11 +1,24 @@
+from builtins import map
+from builtins import str
 import importlib
 import inspect
 import json
 import logging
 import numpy as np
+import past.utils
 import sys
 
-PRIMITIVES = (int, float, str, bool, long, unicode, type(None))
+PRIMITIVES = (int, float, str, bool, int, str, type(None))
+
+
+def old_div(x, y):
+    """Ensures that numpy performs integer division if array in
+       denominator has integer type.
+    """
+    if type(y) is np.ndarray and len(y.shape) == 1 and issubclass(y.dtype.type, np.integer):
+        return x // y
+    else:
+        return past.utils.old_div(x, y)
 
 
 def class_to_dict(inst, ignore_list=[], attr_prefix=''):
@@ -22,7 +35,7 @@ def class_to_dict(inst, ignore_list=[], attr_prefix=''):
     for p in properties:
         prop = getattr(cls, p)  # get property object by name
         output[p] = prop.fget(inst)  # call its fget
-    for k in output.keys():  # filter out dict keys mentioned in ignore-list
+    for k in list(output.keys()):  # filter out dict keys mentioned in ignore-list
         if k in ignore_list:
             del output[k]
         else:  # prepend attr_prefix
@@ -35,13 +48,20 @@ def class_to_dict(inst, ignore_list=[], attr_prefix=''):
 def sanitize_for_db(field):
     if field == None:
         return 'NULL'
-    elif type(field) == long:
+    elif type(field) == int:
         return repr(int(field))
     elif type(field) == str and "'" in field:
         from psycopg2.extensions import adapt
         return str(adapt(field))
     else:
         return repr(field)
+
+
+def prepare_for_hash(item):
+    if type(item) == str and sys.version_info >= (3, 0):
+        return item.encode('utf-8')
+
+    return item
 
 
 def prepare_for_db(payload):
@@ -51,8 +71,8 @@ def prepare_for_db(payload):
 def init_params_from_locals(locals):
     params = {}
 
-    for k, v in locals.iteritems():
-        if k == 'self':
+    for k, v in locals.items():
+        if k == 'self' or k == '__class__':
             continue
 
         if 'marshal' in dir(v):
@@ -67,7 +87,7 @@ def contains_superclass(obj, classname):
     if not inspect.isclass(obj):
         return False
 
-    superclasses = map(lambda cls: cls.__name__, inspect.getmro(obj))
+    superclasses = [cls.__name__ for cls in inspect.getmro(obj)]
 
     return classname in superclasses
 
@@ -94,8 +114,8 @@ def prepare_for_json(item):
     elif type(item) == dict:
         replacement = {}
 
-        for k, v in item.iteritems():
-            k = unicode(k)
+        for k, v in item.items():
+            k = str(k)
             replacement[k] = prepare_for_json(v)
 
         return replacement
@@ -126,7 +146,7 @@ def receive_from_json(item):
     elif type(item) == dict:
         replacement = {}
 
-        for k, v in item.iteritems():
+        for k, v in item.items():
             replacement[k] = receive_from_json(v)
 
         return replacement
@@ -161,16 +181,16 @@ def standardize(item):
        processing output from json.loads.
     """
     if type(item) == tuple or type(item) == list:
-        return map(standardize, item)
+        return list(map(standardize, item))
     elif type(item) == str:
-        return unicode(item)
+        return str(item)
     elif type(item) == np.ndarray:
         return standardize(list(item))
     elif type(item) == dict:
         replacement = {}
 
-        for k, v in item.iteritems():
-            replacement[unicode(k)] = standardize(v)
+        for k, v in item.items():
+            replacement[str(k)] = standardize(v)
 
         return replacement
     else:

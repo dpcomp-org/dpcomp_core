@@ -1,8 +1,11 @@
-import h_tree
+from __future__ import division
+from __future__ import absolute_import
+from builtins import range
+from . import h_tree
 import math
 import numpy as np
 from dpcomp_core import util 
-import estimate_engine
+from . import estimate_engine
 
 
 '''
@@ -80,7 +83,7 @@ def variance(N, b):
     '''Computes variance given domain of size N 
     and branchng factor b.  Equation 3 from paper.'''
     h = math.ceil(math.log(N, b))
-    return ( ((b - 1) * h**3) - ((2 * (b+1) * h**2) / 3))
+    return ( ((b - 1) * h**3) - (util.old_div((2 * (b+1) * h**2), 3)))
 
 def build_tree(x, epsilon,prng, b=2):
 
@@ -93,9 +96,9 @@ def build_tree(x, epsilon,prng, b=2):
     H = h_tree.HTree(b, x)
 
     # add noise
-    epsilon = float(epsilon) / H.height  # uniform allocation
+    epsilon = util.old_div(float(epsilon), H.height)  # uniform allocation
     for node in H.postorder_iter():
-        node.noisy = node.count + prng.laplace(0, 1/epsilon)
+        node.noisy = node.count + prng.laplace(0, util.old_div(1,epsilon))
     
     est_x = H.inference()
     return est_x[:n]  # truncate any padded zeros

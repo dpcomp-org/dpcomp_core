@@ -1,7 +1,10 @@
+from __future__ import division
+from __future__ import absolute_import
+from builtins import range
 import math
 import numpy
-import estimate_engine
-import UG
+from . import estimate_engine
+from . import UG
 from dpcomp_core import util
 
 
@@ -50,15 +53,15 @@ class DPcube1D_engine(estimate_engine.estimate_engine):
        
         len = right - left + 1 
         bias = DPcube1D_engine.Compute(p,pp,left,right)
-        cur = bias + 1.0/epsilon
+        cur = bias + util.old_div(1.0,epsilon)
         flag = False
         pos = left
             
         for k in range(left,right):
             bias1 = DPcube1D_engine.Compute(p,pp,left,k)
             bias2 = DPcube1D_engine.Compute(p,pp,k+1,right)
-            if bias1 + bias2 + 2.0 / epsilon < cur:
-                cur = bias1 + bias2 + 2.0/epsilon
+            if bias1 + bias2 + util.old_div(2.0, epsilon) < cur:
+                cur = bias1 + bias2 + util.old_div(2.0,epsilon)
                 flag = True
                 pos = k
         
@@ -66,7 +69,7 @@ class DPcube1D_engine(estimate_engine.estimate_engine):
             DPcube1D_engine.dpcube(epsilon,p,pp,rp,X2,left,pos,prng)
             DPcube1D_engine.dpcube(epsilon,p,pp,rp,X2,pos+1,right,prng)
         else:
-            ncnt = rp[right+1] - rp[left] + prng.laplace(0.0,1.0/epsilon)
+            ncnt = rp[right+1] - rp[left] + prng.laplace(0.0,util.old_div(1.0,epsilon))
             navg = ncnt * 1.0 / len
                 
             for i in range(left,right+1):
@@ -77,16 +80,16 @@ class DPcube1D_engine(estimate_engine.estimate_engine):
         l = len(x)
         y = numpy.zeros(l)
         
-        p = l/gz
+        p = util.old_div(l,gz)
         for i in range(p):
             nc = sum(x[i*gz:(i+1)*gz]) 
-            nc = nc + prng.laplace(0.0,1.0/epsilon)
+            nc = nc + prng.laplace(0.0,util.old_div(1.0,epsilon))
             for j in range(gz):
                 y[i*gz+j] = nc*1.0/gz   
 
         if l % gz != 0:
             nc = sum(x[p*gz:])
-            nc = nc + prng.laplace(0.0,1.0/epsilon)
+            nc = nc + prng.laplace(0.0,util.old_div(1.0,epsilon))
             for j in range(l - p*gz):
                 y[p*gz+j] = nc*1.0/(l-p*gz) 
         return y

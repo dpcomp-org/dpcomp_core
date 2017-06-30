@@ -1,5 +1,8 @@
+from __future__ import division
+from __future__ import absolute_import
+from builtins import range
 import numpy
-import estimate_engine
+from . import estimate_engine
 import math
 from dpcomp_core import util
 '''
@@ -39,8 +42,8 @@ class privelet_engine(estimate_engine.estimate_engine):
         n = 2
         half_n = 1
         for c in range(m):
-            x[:n:2], x[1:n:2] = (x[:half_n] + x[half_n:n])/2.0, \
-                                (x[:half_n] - x[half_n:n])/2.0
+            x[:n:2], x[1:n:2] = util.old_div((x[:half_n] + x[half_n:n]),2.0), \
+                                util.old_div((x[:half_n] - x[half_n:n]),2.0)
             n *= 2
             half_n *= 2
 
@@ -57,12 +60,12 @@ class privelet_engine(estimate_engine.estimate_engine):
         n = len(x)
         if n <= 16:
             # don't convert to wavelet parameters for small domains
-            return x + prng.laplace(0.0, 1.0 / epsilon, len(x))
+            return x + prng.laplace(0.0, util.old_div(1.0, epsilon), len(x))
         else:
             m = int(math.ceil(math.log(n, 2)))
             x1 = numpy.zeros(2**m)
             x1[:n] = x
             y1 = privelet_engine._wave(x1, m) + \
-                 prng.laplace(0.0, (m+1.0) / epsilon, len(x1))
+                 prng.laplace(0.0, util.old_div((m+1.0), epsilon), len(x1))
 
             return privelet_engine._dewave(y1, m)[:n]

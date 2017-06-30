@@ -1,20 +1,27 @@
 '''
 @author: Gergely Acs <acs@crysys.hu>
 '''
+from __future__ import division
+from __future__ import absolute_import
 
-import Utils
+from builtins import map
+from builtins import zip
+from builtins import range
+from builtins import object
+from . import Utils
 import numpy as np
 import math
 import random as rnd
 import heapq
+from dpcomp_core import util
 
-class Histogram:
+class Histogram(object):
 
     def __init__(self, bins = [], normalized=False, bin_num=None):
         if bin_num != None:
             self.bins = np.zeros(bin_num)
         if len(bins) > 0:
-            self.bins = np.array(map(lambda x: max(x, 0), bins))
+            self.bins = np.array([max(x, 0) for x in bins])
 
         self.normalized = normalized
 
@@ -76,7 +83,7 @@ class Histogram:
         return Histogram(np.array(self.bins), normalized=self.normalized) 
 
     def update(self, bins):
-        self.bins = np.array(map(lambda x: max(x, 0), bins))
+        self.bins = np.array([max(x, 0) for x in bins])
 
     def __getitem__(self,key):
         return self.bins[key]
@@ -92,7 +99,7 @@ class Histogram:
 
     def nullifyNaN(self):
         assert not self.normalized
-        self.bins = map(lambda x: 0 if math.isnan(x) else x, self.bins)
+        self.bins = [0 if math.isnan(x) else x for x in self.bins]
 
     def quantile(self, p):
         count = self.count()
@@ -100,27 +107,27 @@ class Histogram:
 
         for i in range(len(self)):
             s += self.bins[i]
-            if count > 0 and float(s) / count > p:
+            if count > 0 and util.old_div(float(s), count) > p:
                 return i - 1
 
         return 0
         
 
     def __add__(self,other):
-        if isinstance(other,  (int, long, float)):
-            return Histogram(map(lambda x: x + other, self.bins)) 
+        if isinstance(other,  (int, float)):
+            return Histogram([x + other for x in self.bins]) 
         else:
-            return Histogram(map(sum, zip(self.bins, other_bins)))
+            return Histogram(list(map(sum, list(zip(self.bins, other_bins)))))
 
     def __mul__(self,other):
-        if isinstance(other,  (int, long, float)):
-            return Histogram(map(lambda x: x * other, self.bins)) 
+        if isinstance(other,  (int, float)):
+            return Histogram([x * other for x in self.bins]) 
         else:
             raise NameError('NotImplemented')
 
     def __imul__(self, other):
-        if isinstance(other, (int, long, float)):
-            self.bins = map(lambda x: x * other, self.bins)
+        if isinstance(other, (int, float)):
+            self.bins = [x * other for x in self.bins]
             self.normalized = False
         else:
             raise NameError('NotImplemented')
@@ -128,20 +135,20 @@ class Histogram:
         return self
 
     def __iadd__(self, other):
-        if isinstance(other, (int, long, float)):
-            self.bins = map(lambda x: x + other, self.bins)
+        if isinstance(other, (int, float)):
+            self.bins = [x + other for x in self.bins]
 
-        self.bins = map(sum, zip(self.bins, other.bins))
+        self.bins = list(map(sum, list(zip(self.bins, other.bins))))
         return self
 
     def __div__(self,other):
-        if isinstance(other,  (int, long, float)):
-            return Histogram(map(lambda x: float(x) / other, self.bins)) 
+        if isinstance(other,  (int, float)):
+            return Histogram([util.old_div(float(x), other) for x in self.bins]) 
         else:
             raise NameError('NotImplemented')
 
     def getTop(self, T):
-        return map(lambda x: tuple(reversed(x)), heapq.nlargest(T, map(lambda x: tuple(reversed(x)), list(enumerate(self.bins)))))
+        return [tuple(reversed(x)) for x in heapq.nlargest(T, [tuple(reversed(x)) for x in list(enumerate(self.bins))])]
 
     def getFirst(self, T):
         return list(enumerate(self.bins))[:T]
@@ -167,20 +174,17 @@ class Histogram:
 
     def MAP(self, histogram):
         sanity_bound = self.sanity_bound()
-        return np.mean(map(lambda x:math.fabs(x[0] - x[1]) /
-                   max(x[0],sanity_bound), zip(self.bins, histogram.bins)))
+        return np.mean([util.old_div(math.fabs(x[0] - x[1]),
+                   max(x[0],sanity_bound)) for x in zip(self.bins, histogram.bins)])
 
     def l1distance(self, histogram):
-        return np.sum(map(lambda x: math.fabs(x[0] - x[1]),
-                          zip(self.bins, histogram.bins)))
+        return np.sum([math.fabs(x[0] - x[1]) for x in zip(self.bins, histogram.bins)])
 
     def l2distance(self, histogram):
-        return math.sqrt(np.sum(map(lambda x: (x[0] - x[1])**2,
-                          zip(self.bins, histogram.bins))))
+        return math.sqrt(np.sum([(x[0] - x[1])**2 for x in zip(self.bins, histogram.bins)]))
 
     def MSE(self, histogram):
-        return np.mean(map(lambda x: (x[0] - x[1])**2,
-                          zip(self.bins, histogram.bins)))
+        return np.mean([(x[0] - x[1])**2 for x in zip(self.bins, histogram.bins)])
 
     def kl_div(self, histogram):
         assert self.normalized and histogram.normalized

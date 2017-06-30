@@ -1,4 +1,8 @@
 """Implementation of greedy hierarchy engine."""
+from __future__ import division
+from builtins import map
+from builtins import zip
+from builtins import range
 import itertools
 import numpy
 from scipy.linalg import block_diag
@@ -51,7 +55,7 @@ class greedyH_engine(estimate_engine.estimate_engine):
                 y2.append(sum(x[lb:(rb+1)]) * dist[c])
 
         qmat = numpy.array(qmat)
-        y2 += prng.laplace(0.0, 1.0/epsilon, len(y2))
+        y2 += prng.laplace(0.0, util.old_div(1.0,epsilon), len(y2))
 
         return numpy.dot(inv, numpy.dot(qmat.T, y2))
 
@@ -82,23 +86,23 @@ class greedyH_engine(estimate_engine.estimate_engine):
         QtQ = fullQtQ[:, offset:offset+n]
         if (numpy.min(QtQ, axis=1) == numpy.max(QtQ, axis=1)).all():
             mat = numpy.zeros([n, n])
-            mat.fill(1.0 / n**2)
+            mat.fill(util.old_div(1.0, n**2))
             return numpy.linalg.norm(QtQ[:,0], 2)**2, \
                    mat, numpy.array([1.0]), [[offset, offset+n-1]]
 
         if n <= self._branch:
-            bound = zip(range(n), range(1,n+1))
+            bound = list(zip(list(range(n)), list(range(1,n+1))))
         else:
             rem = n % self._branch
-            step = (n-rem) / self._branch
+            step = util.old_div((n-rem), self._branch)
             swi = (self._branch-rem) * step
-            sep = range(0, swi, step) + range(swi, n, step+1) + [n]
-            bound = zip(sep[:-1], sep[1:])
+            sep = list(range(0, swi, step)) + list(range(swi, n, step+1)) + [n]
+            bound = list(zip(sep[:-1], sep[1:]))
 
-        serr, sinv, sdist, sq = zip(*[self._GreedyHierByLv
+        serr, sinv, sdist, sq = list(zip(*[self._GreedyHierByLv
                                     (fullQtQ, c[1]-c[0], offset+c[0], 
-                                    depth = depth+1) for c in bound])
-        invAuList = map(lambda c: c.sum(axis=0), sinv)
+                                    depth = depth+1) for c in bound]))
+        invAuList = [c.sum(axis=0) for c in sinv]
         invAu = numpy.hstack(invAuList)
         k = invAu.sum()
         m1 = sum(map(lambda rng, v:
@@ -112,14 +116,14 @@ class greedyH_engine(estimate_engine.estimate_engine):
                    numpy.hstack([[0], numpy.hstack(sdist)]), \
                    [[offset, offset+n-1]] + list(itertools.chain(*sq))
 
-        decay = 1.0 / ( self._branch**(depth / 2.0))
-        err1 = numpy.array(range(self._granu, 0, -1))**2
-        err2 = numpy.array(range(self._granu))**2 * decay
+        decay = util.old_div(1.0, ( self._branch**(util.old_div(depth, 2.0))))
+        err1 = numpy.array(list(range(self._granu, 0, -1)))**2
+        err2 = numpy.array(list(range(self._granu)))**2 * decay
         toterr = 1.0/err1 * (sumerr - ((m-m1)*decay+m1) * err2 / (err1+err2*k))
 
         err = toterr.min() * self._granu**2
-        perc = 1 - numpy.argmin(toterr) / float(self._granu)
-        inv = (1.0/perc)**2 * (block_diag(*sinv) 
+        perc = 1 - util.old_div(numpy.argmin(toterr), float(self._granu))
+        inv = (util.old_div(1.0,perc))**2 * (block_diag(*sinv) 
               - (1-perc)**2 / ( perc**2 + k * (1-perc)**2 )
               * numpy.dot(invAu.reshape([n, 1]), invAu.reshape([1, n])))
         dist = numpy.hstack([[1-perc], perc*numpy.hstack(sdist)])

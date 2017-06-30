@@ -1,3 +1,4 @@
+from __future__ import division
 ######################################################################
 #  Computing the MinL2 solution for a hierarchical tree of queries
 #
@@ -32,7 +33,12 @@
 #	HNode(start: 0, end: 1) = (count=0, noisy=0, inferred=0.333333333333)
 #
 
+from builtins import map
+from builtins import range
+from builtins import object
 import math
+from functools import reduce
+from dpcomp_core import util
 
 class HNode(object):
 	def __init__(self, start, end, count):
@@ -76,7 +82,7 @@ class HTree(object):
 		self.height = height
 			
 	def __repr__(self):
-		return '\n'.join(map(lambda x: x.__repr__(), self.postorder_iter()))
+		return '\n'.join([x.__repr__() for x in self.postorder_iter()])
 
 	def inference(self):
 		k = self.k
@@ -90,7 +96,7 @@ class HTree(object):
 				total = reduce(lambda total,child: total + child.hbar, node.children, 0)
 				node.total_z_children = total
 				b = (alpha - 1) * total
-				node.hbar = float(a + b) / (k*alpha - 1)
+				node.hbar = util.old_div(float(a + b), (k*alpha - 1))
 
 		# go top down to compute hbar[v]
 		leaves = [None]*(k**(self.height-1))
@@ -99,7 +105,7 @@ class HTree(object):
 				continue
 			parent = node.parent
 			sum_z = parent.total_z_children
-			node.hbar += (parent.hbar - sum_z)/k
+			node.hbar += util.old_div((parent.hbar - sum_z),k)
 			if node.isleaf():
 				assert leaves[node.start] == None
 				leaves[node.start] = node.hbar
@@ -129,7 +135,7 @@ class HTree(object):
 				yield (node, height)
 			else:
 				yield node
-			map(lambda child: stack.append((child, height-1)), node.children)
+			list(map(lambda child: stack.append((child, height-1)), node.children))
 
 	def __add_child(self, parent, node):
 		parent.children.append(node)
@@ -148,8 +154,8 @@ class Test(unittest.TestCase):
 		child2.noisy = 0.5
 		leaves = htree.inference()
 		self.assertEqual(2, len(leaves))
-		self.assertAlmostEqual(1./6, leaves[0])
-		self.assertAlmostEqual(1./6, leaves[1])
+		self.assertAlmostEqual(util.old_div(1.,6), leaves[0])
+		self.assertAlmostEqual(util.old_div(1.,6), leaves[1])
 
 	def test_inference2(self):
 		htree = HTree(2, [0]*2)
@@ -159,8 +165,8 @@ class Test(unittest.TestCase):
 		child2.noisy = 0
 		leaves = htree.inference()
 		self.assertEqual(2, len(leaves))
-		self.assertAlmostEqual(-1./3, leaves[0])
-		self.assertAlmostEqual(2./3, leaves[1])
+		self.assertAlmostEqual(util.old_div(-1.,3), leaves[0])
+		self.assertAlmostEqual(util.old_div(2.,3), leaves[1])
 
 	def test_inference3(self):
 		htree = HTree(2, [0]*2)
@@ -170,8 +176,8 @@ class Test(unittest.TestCase):
 		child2.noisy = 0
 		leaves = htree.inference()
 		self.assertEqual(2, len(leaves))
-		self.assertAlmostEqual(-1./3, leaves[0])
-		self.assertAlmostEqual(2./3, leaves[1])
+		self.assertAlmostEqual(util.old_div(-1.,3), leaves[0])
+		self.assertAlmostEqual(util.old_div(2.,3), leaves[1])
 
 
 if __name__ == '__main__':

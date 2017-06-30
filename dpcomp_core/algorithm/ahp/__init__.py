@@ -1,6 +1,6 @@
 import math
 import numpy as np
-import ahp_fast
+from . import ahp_fast
 from dpcomp_core.algorithm import estimate_engine
 from dpcomp_core import util 
 

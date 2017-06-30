@@ -1,3 +1,4 @@
+from builtins import str
 from dpcomp_core.mixins import Cacheable
 import hashlib
 import math
@@ -51,12 +52,12 @@ class Single(Marshallable, Cacheable):
     def hash(self):
         m = hashlib.sha1()
 
-        m.update(self.__class__.__name__)
-        m.update(str(self.epsilon))
-        m.update(str(self.seed))
-        m.update(self.X.hash)
-        m.update(self.W.hash)
-        m.update(self.A.hash)
+        m.update(util.prepare_for_hash(self.__class__.__name__))
+        m.update(util.prepare_for_hash(str(self.epsilon)))
+        m.update(util.prepare_for_hash(str(self.seed)))
+        m.update(util.prepare_for_hash(self.X.hash))
+        m.update(util.prepare_for_hash(self.W.hash))
+        m.update(util.prepare_for_hash(self.A.hash))
 
         return m.hexdigest()
 

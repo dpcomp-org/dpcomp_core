@@ -1,3 +1,5 @@
+from __future__ import division
+from builtins import str
 import numpy
 import os
 import sys
@@ -66,7 +68,7 @@ def L1partition(x, epsilon, ratio=0.5, gethist=False,seed=None):
         return bucks
     else:
         for lb in hist[1:]:
-            hatx[lb:rb] = max(0, sum(x[lb:rb]) + prng.laplace(0, 1.0/(epsilon*(1-ratio)), 1)) / float(rb - lb)
+            hatx[lb:rb] = util.old_div(max(0, sum(x[lb:rb]) + prng.laplace(0, util.old_div(1.0,(epsilon*(1-ratio))), 1)), float(rb - lb))
             rb = lb
             if lb == 0:
                 break
@@ -112,7 +114,7 @@ def L1partition_approx(x, epsilon, ratio=0.5, gethist=False,seed =None):
         return bucks
     else:
         for lb in hist[1:]:
-            hatx[lb:rb] = max(0, sum(x[lb:rb]) + prng.laplace(0, 1.0/(epsilon*(1-ratio)), 1)) / float(rb - lb)
+            hatx[lb:rb] = util.old_div(max(0, sum(x[lb:rb]) + prng.laplace(0, util.old_div(1.0,(epsilon*(1-ratio))), 1)), float(rb - lb))
             rb = lb
             if lb == 0:
                 break

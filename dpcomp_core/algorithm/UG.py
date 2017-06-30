@@ -1,6 +1,9 @@
+from __future__ import division
+from __future__ import absolute_import
+from builtins import range
 import math
 import numpy
-import estimate_engine
+from . import estimate_engine
 from dpcomp_core import util
 
 '''
@@ -52,7 +55,7 @@ class UG_engine(estimate_engine.estimate_engine):
             for i in range(x1,x2+1):
                 cnt = cnt + sum(x[i][y1:y2+1])
         
-            navg = (prng.laplace(cnt,1.0/epsilon)) / ((x2-x1+1)*(y2-y1+1))
+            navg = util.old_div((prng.laplace(cnt,util.old_div(1.0,epsilon))), ((x2-x1+1)*(y2-y1+1)))
         
             for i in range(x1,x2+1):
                 y[i][y1:y2+1] = navg
@@ -70,7 +73,7 @@ class UG_engine(estimate_engine.estimate_engine):
         # assume the data scale is non private information. 
         N = x.sum()
         # compute number of cells
-        M = (N*epsilon) / self.c
+        M = util.old_div((N*epsilon), self.c)
         
         if self.gz == 0:
             grid = int(math.sqrt(n*m/M)-1)+1
@@ -80,8 +83,8 @@ class UG_engine(estimate_engine.estimate_engine):
         if grid < 1:
             grid = 1
         
-        num1 = int((n-1) / grid + 1)
-        num2 = int((m-1) / grid + 1)
+        num1 = int(util.old_div((n-1), grid) + 1)
+        num2 = int(util.old_div((m-1), grid) + 1)
         
         cells = UG_engine.GenerateCells(n,m,num1,num2,grid)
         

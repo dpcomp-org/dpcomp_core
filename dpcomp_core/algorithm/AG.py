@@ -1,6 +1,9 @@
+from __future__ import division
+from __future__ import absolute_import
+from builtins import range
 import math
 import numpy
-import estimate_engine
+from . import estimate_engine
 from dpcomp_core import util
 
 '''
@@ -54,7 +57,7 @@ class AG_engine(estimate_engine.estimate_engine):
         y = numpy.ndarray((n,m),'float32')
         y.fill(0)
         
-        noisycnt = counts + prng.laplace(0,1.0/(alpha * epsilon),len(counts))
+        noisycnt = counts + prng.laplace(0,util.old_div(1.0,(alpha * epsilon)),len(counts))
         
         #second level grids and compute noisy counts with postprocessings
         for k in range(len(cells)):
@@ -72,15 +75,15 @@ class AG_engine(estimate_engine.estimate_engine):
             newgrid = int(math.sqrt(nn*mm*1.0/M2)-1) + 1
             if newgrid <= 0:
                 newgrid = 1;
-            num1 = int((nn-1) / newgrid + 1)
-            num2 = int((mm-1) / newgrid + 1)
+            num1 = int(util.old_div((nn-1), newgrid) + 1)
+            num2 = int(util.old_div((mm-1), newgrid) + 1)
             
             curX = numpy.ndarray((nn,mm),'float32')
             for xx in range(x1,x2+1):
                 curX[xx-x1] = x[xx][y1:y2+1]
             
             newcells,newcounts = AG_engine.GenerateCells(curX,nn,mm,num1,num2,newgrid)
-            ncounts = newcounts + prng.laplace(0,1.0/((1-alpha)*epsilon),len(newcounts))
+            ncounts = newcounts + prng.laplace(0,util.old_div(1.0,((1-alpha)*epsilon)),len(newcounts))
             
             #postprocessing
             newncnt = (alpha*m2)**2 / ((1-alpha)**2 + (alpha*m2)**2) * noisycnt[k] + (1-alpha)**2 / ((1-alpha)**2 + (alpha*m2)**2) * sum(ncounts)
@@ -105,7 +108,7 @@ class AG_engine(estimate_engine.estimate_engine):
         n,m = x.shape
         N = sum(sum(x))
         # compute number of cells in the first level
-        m1 = int(math.sqrt((N*epsilon) / self.c) / 4 - 1) + 1
+        m1 = int(util.old_div(math.sqrt(util.old_div((N*epsilon), self.c)), 4) - 1) + 1
         if m1 < 10:
             m1 = 10
         M = m1**2
@@ -114,8 +117,8 @@ class AG_engine(estimate_engine.estimate_engine):
         if grid <= 0:
             grid = 1;
         
-        num1 = int((n-1) / grid + 1)
-        num2 = int((m-1) / grid + 1)
+        num1 = int(util.old_div((n-1), grid) + 1)
+        num2 = int(util.old_div((m-1), grid) + 1)
         
         cells,counts = AG_engine.GenerateCells(x,n,m,num1,num2,grid)
         

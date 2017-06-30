@@ -1,9 +1,12 @@
 """Unit test for identity.py"""
+from __future__ import division
 
+from builtins import range
 import numpy
 from dpcomp_core.algorithm import identity
 from dpcomp_core import workload 
 from dpcomp_core import dataset
+from dpcomp_core import util
 import unittest
 
 dnames = [ 'ADULT', 'HEPTH', 'INCOME', 'MEDCOST', 'NETTRACE', 'PATENT', 'SEARCHLOGS']
@@ -13,10 +16,10 @@ class IdentityTests(unittest.TestCase):
 
     def setUp(self):
         n = 1024
-        self.hist = numpy.array( range(n))
+        self.hist = numpy.array( list(range(n)))
         self.d = dataset.Dataset(self.hist, None)
         self.dist = numpy.random.exponential(1,n)
-        self.dist = self.dist / float(self.dist.sum())
+        self.dist = util.old_div(self.dist, float(self.dist.sum()))
     
         self.epsilon = 0.1
         self.w1 = workload.Identity.oneD(1024 , weight=1.0)

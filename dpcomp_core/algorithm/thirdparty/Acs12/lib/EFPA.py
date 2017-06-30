@@ -1,16 +1,21 @@
 '''
 @author: Gergely Acs <acs@crysys.hu>
 '''
+from __future__ import division
+from __future__ import absolute_import
 
+from builtins import map
+from builtins import range
 from math import *
-from Utils import *
-import ExpMechanism
-from ExpMechanism import *
+from .Utils import *
+from . import ExpMechanism
+from .ExpMechanism import *
 import numpy as np
 import cmath
+from dpcomp_core import util
 
 def EFPA(data, l2_sens, eps,prng):
-    data = map(float, data)
+    data = list(map(float, data))
     coeffs = rfft(data)
 
     n = len(coeffs)
@@ -28,14 +33,14 @@ def EFPA(data, l2_sens, eps,prng):
     # DC coeff
     kept = 1
     d = abs(coeffs[0])**2
-    sum = sqrt(s - d) + sqrt(2) *  kept * (l2_sens / eps_2)
+    sum = sqrt(s - d) + sqrt(2) *  kept * (util.old_div(l2_sens, eps_2))
     priv_items = [PrivItem(-sum, [0, kept])]
     
     # Other coeffs except the last one
-    for i in xrange(1, n-1):
+    for i in range(1, n-1):
         kept += 2
         d += 2 * abs(coeffs[i])**2
-        sum = sqrt(s - d) + sqrt(2) *  kept * (l2_sens / eps_2)
+        sum = sqrt(s - d) + sqrt(2) *  kept * (util.old_div(l2_sens, eps_2))
         #sum = sqrt(sum) * sqrt(kept)
         priv_items.append(PrivItem(-sum, [i, kept]))
 
@@ -47,7 +52,7 @@ def EFPA(data, l2_sens, eps,prng):
         kept += 2
         d += 2 * abs(coeffs[n-1])**2
 
-    sum = sqrt(s - d) + sqrt(2) *  kept * (l2_sens / eps_2)
+    sum = sqrt(s - d) + sqrt(2) *  kept * (util.old_div(l2_sens, eps_2))
     priv_items.append(PrivItem(-sum, [n, kept]))
 
     # maximal kept coeffs is upper bounded by the length data vector
@@ -62,6 +67,6 @@ def EFPA(data, l2_sens, eps,prng):
         else:
             coeffs[j] = 0
 
-    return map(lambda x: x.real,  irfft(coeffs, len(data)))
+    return [x.real for x in irfft(coeffs, len(data))]
 
 

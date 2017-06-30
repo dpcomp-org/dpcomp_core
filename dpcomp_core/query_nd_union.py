@@ -1,3 +1,5 @@
+from builtins import zip
+from builtins import object
 import numpy
 import collections
 
@@ -39,7 +41,7 @@ import collections
 
 ndRange = collections.namedtuple('ndRange', 'lb ub wgt')
 
-class ndRangeUnion:
+class ndRangeUnion(object):
 
     def __init__(self):
         self.ranges = []    # a list of multi-dim range queries, each is ndRange named tuple

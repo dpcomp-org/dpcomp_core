@@ -1,3 +1,4 @@
+from builtins import str
 import hashlib
 from dpcomp_core.mixins import Marshallable
 from dpcomp_core import util
@@ -39,6 +40,6 @@ class estimate_engine(Marshallable):
         Uniqueness of this hash relies on subclasses writing init parameters as instance variables
         """
         m = hashlib.sha1()
-        m.update(self.__class__.__name__)
-        m.update(str(util.standardize(sorted(self.init_params.items()))))
+        m.update(util.prepare_for_hash(self.__class__.__name__))
+        m.update(util.prepare_for_hash(str(util.standardize(sorted(self.init_params.items())))))
         return m.hexdigest()

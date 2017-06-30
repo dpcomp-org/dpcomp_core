@@ -1,6 +1,10 @@
+from __future__ import division
+from __future__ import absolute_import
+from builtins import range
+from builtins import object
 import math
 import numpy
-import estimate_engine
+from . import estimate_engine
 from dpcomp_core import util
 
 '''
@@ -74,17 +78,17 @@ class HNode(object):
 def BuildTree(Node,acc,X,start,end,b,epsilon,height,toth,prng):
     ''' Build the tree on X based on branching 2 and compute noisy count'''
     if height == 0:
-	eps = 2**((toth - height)*1.0/3) * epsilon * (2**(1.0/3) -1)/(2**((toth+1)*1.0/3)-1)
-	nv = X[start[0]][start[1]] + prng.laplace(0.0,1.0/eps)
+        eps = 2**((toth - height)*1.0/3) * epsilon * (2**(util.old_div(1.0,3)) -1)/(2**((toth+1)*1.0/3)-1)
+        nv = X[start[0]][start[1]] + prng.laplace(0.0,util.old_div(1.0,eps))
         Node.count = nv
 
     else:
-        gridx = [int((end[0] - start[0] + 1)/b)]*b
+        gridx = [int(util.old_div((end[0] - start[0] + 1),b))]*b
         left = end[0] - start[0] + 1 - sum(gridx)
         for i in range(left):
             gridx[i] = gridx[i] + 1
 
-        gridy = [int((end[1] - start[1] + 1)/b)]*b
+        gridy = [int(util.old_div((end[1] - start[1] + 1),b))]*b
         left = end[1] - start[1] + 1 - sum(gridy)
         for i in range(left):
             gridy[i] = gridy[i] + 1
@@ -119,11 +123,11 @@ def BuildTree(Node,acc,X,start,end,b,epsilon,height,toth,prng):
             
         tot = 0;
         for i in range(start[0],end[0]+1):
-	    tot = tot + acc[i][end[1]] - acc[i][start[1]-1]
+	        tot = tot + acc[i][end[1]] - acc[i][start[1]-1]
         
-	eps = 2**((toth - height)*1.0/3) * epsilon * (2**(1.0/3) -1)/(2**((toth+1)*1.0/3)-1)
+        eps = 2**((toth - height)*1.0/3) * epsilon * (2**(util.old_div(1.0,3)) -1)/(2**((toth+1)*1.0/3)-1)
 
-	ntot = tot + prng.laplace(0.0, 1.0/eps)
+        ntot = tot + prng.laplace(0.0, util.old_div(1.0,eps))
         Node.count = ntot
 
 def WeightAvg(Node,epsilon,toth):
@@ -135,8 +139,8 @@ def WeightAvg(Node,epsilon,toth):
         WeightAvg(ch,epsilon,toth)
     
     if Node.count != None:
-        eps1 = 2**((toth - Node.height)*1.0/3) * epsilon * (2**(1.0/3) -1)/(2**((toth+1)*1.0/3)-1)
-        eps2 = 2**((toth - Node.height + 1)*1.0/3) * epsilon * (2**(1.0/3) -1)/(2**((toth+1)*1.0/3)-1)
+        eps1 = 2**((toth - Node.height)*1.0/3) * epsilon * (2**(util.old_div(1.0,3)) -1)/(2**((toth+1)*1.0/3)-1)
+        eps2 = 2**((toth - Node.height + 1)*1.0/3) * epsilon * (2**(util.old_div(1.0,3)) -1)/(2**((toth+1)*1.0/3)-1)
 
         alpha = 4*eps1**2 / (4*eps1**2 + eps2**2);
  

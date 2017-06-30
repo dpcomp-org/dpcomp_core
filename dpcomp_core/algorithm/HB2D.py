@@ -1,4 +1,9 @@
-import estimate_engine
+from __future__ import division
+from __future__ import absolute_import
+from builtins import range
+from past.utils import old_div
+from builtins import object
+from . import estimate_engine
 import math
 import numpy
 from dpcomp_core import util
@@ -102,16 +107,16 @@ def variance(N, b):
 def BuildTree(Node,acc,X,start,end,b,epsilon,height,toth,prng):
     ''' Build the tree on X based on branching b and compute noisy count'''
     if height == 0:
-        nv = X[start[0]][start[1]] + prng.laplace(0.0,1.0/epsilon)
+        nv = X[start[0]][start[1]] + prng.laplace(0.0,old_div(1.0,epsilon))
         Node.count = nv
 
     else:
-        gridx = [int((end[0] - start[0] + 1)/b)]*b
+        gridx = [int(old_div((end[0] - start[0] + 1),b))]*b
         left = end[0] - start[0] + 1 - sum(gridx)
         for i in range(left):
             gridx[i] = gridx[i] + 1
 
-        gridy = [int((end[1] - start[1] + 1)/b)]*b
+        gridy = [int(old_div((end[1] - start[1] + 1),b))]*b
         left = end[1] - start[1] + 1 - sum(gridy)
         for i in range(left):
             gridy[i] = gridy[i] + 1
@@ -149,7 +154,7 @@ def BuildTree(Node,acc,X,start,end,b,epsilon,height,toth,prng):
             for i in range(start[0],end[0]+1):
                 tot = tot + acc[i][end[1]] - acc[i][start[1]-1]
                         
-            ntot = tot + prng.laplace(0.0, 1.0/epsilon)
+            ntot = tot + prng.laplace(0.0, old_div(1.0,epsilon))
             Node.count = ntot
 
 def WeightAvg(Node,b):
