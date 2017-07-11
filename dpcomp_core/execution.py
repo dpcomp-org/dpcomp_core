@@ -1,6 +1,7 @@
 from builtins import object
 from collections import defaultdict
 from dpcomp_core import cartesian_product as cp
+from dpcomp_core import util
 import json
 
 
@@ -21,7 +22,7 @@ class FileWriter(object):
         else:
             self._begin = False
 
-        self._fd.write(json.dumps(metric_group))
+        self._fd.write(json.dumps(util.prepare_for_json(metric_group)))
 
     def close(self):
         self._fd.write(']')
