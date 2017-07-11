@@ -19,7 +19,8 @@ class TestExecution(unittest.TestCase):
         writer.write(self.metric_group)
         writer.close()
 
-        self.assertCountEqual(writer.metric_groups.pop(), self.metric_group)
+        self.assertEqual(sorted(writer.metric_groups.pop()), 
+                         sorted(self.metric_group))
         
     def test_file_writer(self):
         fd = mock.MagicMock()
