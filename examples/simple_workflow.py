@@ -1,3 +1,4 @@
+from builtins import range
 import dpcomp_core.cartesian_product as cp
 from dpcomp_core.execution import assemble_experiments
 from dpcomp_core.execution import ListWriter
@@ -28,7 +29,7 @@ scales = {1: [1e3],
 domains = {1: [256],
            2: [(32,32)]}
 ## dataset sampling seeds, used to generate different data instances based on the same dataset configuration.
-ds_seeds = range(2) 
+ds_seeds = list(range(2)) 
 
 ## workload specification. 2 workloads: 1D x 1, 2D x 1
 workloads = {1: [workload.Prefix1D],
@@ -39,7 +40,7 @@ query_sizes = [2000]
 epsilons = [0.1]
 
 ## experiment seeds 
-ex_seeds = range(2)
+ex_seeds = list(range(2))
 
 
 # run experiments

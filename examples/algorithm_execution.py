@@ -1,3 +1,6 @@
+from __future__ import division
+from __future__ import print_function
+from past.utils import old_div
 from dpcomp_core.algorithm import AG
 from dpcomp_core import dataset
 from dpcomp_core import util
@@ -36,4 +39,4 @@ x_hat = a.Run(w, x, epsilon, seed)
 
 # Compute error between true x and noisy estimate
 diff = w.evaluate(x) - w.evaluate(x_hat)
-print 'Per Query Average Absolute Error:', np.linalg.norm(diff,1) / float(diff.size)
+print('Per Query Average Absolute Error:', old_div(np.linalg.norm(diff,1), float(diff.size)))

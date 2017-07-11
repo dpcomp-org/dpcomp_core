@@ -52,7 +52,7 @@ def config_hash(params):
     h.update(util.prepare_for_hash(repr(params['scale'])))
     h.update(util.prepare_for_hash(repr(params['domain'])))
     h.update(util.prepare_for_hash(repr(params['query_size'])))
-    h.update(params['algorithm'].hash)
+    h.update(util.prepare_for_hash(params['algorithm'].hash))
 
     return h.hexdigest()
 

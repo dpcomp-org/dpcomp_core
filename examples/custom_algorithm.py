@@ -1,3 +1,4 @@
+from builtins import range
 import dpcomp_core.cartesian_product as cp
 from dpcomp_core.execution import assemble_experiments
 from dpcomp_core.execution import ListWriter
@@ -36,8 +37,8 @@ workloads = {1: [workload.Prefix1D],
              2: [workload.RandomRange]}
 query_sizes = [2000]
 epsilons = [0.1]
-ex_seeds = range(2)
-ds_seeds = range(2)
+ex_seeds = list(range(2))
+ds_seeds = list(range(2))
 
 # run experiments
 writer = ListWriter()
