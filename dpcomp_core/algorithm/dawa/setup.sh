@@ -4,7 +4,7 @@ echo 'Cleaning up old objects'
 rm -r build
 rm ./cutils/*.pyc
 rm ./cutils/cutil.py
-rm ./cutils/_cutil.so
+rm ./cutils/*.so
 rm ./cutils/cutil_wrap.cpp
 
 echo 'Complie the C++ utility library'
