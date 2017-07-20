@@ -1,10 +1,15 @@
 import json
 from dpcomp_core import cartesian_product
+from dpcomp_core.algorithm import uniform
 from dpcomp_core.execution import assemble_experiments
 from dpcomp_core.execution import FileWriter
 from dpcomp_core.execution import ListWriter
 from dpcomp_core.execution import process_experiments
+from dpcomp_core import dataset
+from dpcomp_core import experiment
+from dpcomp_core import metric
 from dpcomp_core import workload
+from dpcomp_core import util
 import mock
 import unittest
 
@@ -12,7 +17,15 @@ import unittest
 class TestExecution(unittest.TestCase):
 
     def setUp(self):
-        self.metric_group = ['m1', 'm2']
+        A = uniform.uniform_noisy_engine()
+        X = dataset.DatasetSampledFromFile(nickname='BIDS-ALL', 
+                                           sample_to_scale=1E4, 
+                                           reduce_to_dom_shape=1024, 
+                                           seed=0)
+        W = workload.Prefix1D(domain_shape_int=1024)
+        E1 = experiment.Single(X, W, A, 0.1, 0)
+        E2 = experiment.Single(X, W, A, 0.1, 1)
+        self.metric_group = [metric.SampleError(E1), metric.SampleError(E2)]
 
     def test_list_writer(self):
         writer = ListWriter()
@@ -26,7 +39,11 @@ class TestExecution(unittest.TestCase):
         writer = FileWriter(fd)
 
         writer.write(self.metric_group)
-        fd.write.assert_called_with(json.dumps(self.metric_group))
+
+        prepared_m1 = util.prepare_for_json(self.metric_group[0].asDict())
+        prepared_m2 = util.prepare_for_json(self.metric_group[1].asDict())
+
+        fd.write.assert_called_with(json.dumps([prepared_m1, prepared_m2]))
 
     def test_process_experiments(self):
         writer = ListWriter()

@@ -21,7 +21,8 @@ class FileWriter(object):
         else:
             self._begin = False
 
-        self._fd.write(json.dumps(util.prepare_for_json(metric_group)))
+        prepared_groups = [util.prepare_for_json(group.asDict()) for group in metric_group]
+        self._fd.write(json.dumps(prepared_groups))
 
     def close(self):
         self._fd.write(']')
@@ -45,7 +46,7 @@ class ListWriter(object):
 
 
 def process_experiments(params_map, writer, procs=1):
-    for config_hash, params_list in params_map.iteritems():
+    for config_hash, params_list in params_map.items():
         group_metrics = [cp.run(params) for params in params_list]
 
         writer.write(group_metrics)
