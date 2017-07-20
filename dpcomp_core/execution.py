@@ -22,7 +22,8 @@ class FileWriter(object):
         else:
             self._begin = False
 
-        self._fd.write(json.dumps(util.prepare_for_json(metric_group)))
+        prepared_groups = [util.prepare_for_json(group.asDict()) for group in metric_group]
+        self._fd.write(json.dumps(prepared_groups))
 
     def close(self):
         self._fd.write(']')
