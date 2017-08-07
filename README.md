@@ -1,7 +1,10 @@
 # DPComp Core
 [DPComp.org](https://www.dpcomp.org/) is a web-based tool designed to help both practitioners and researchers assess the accuracy of state-of-the-art differentially private algorithms based on [DPBench](#dpbench).
 
-This repository contains datasets, workloads, and algorithms used in DPBench, and is supporting core functionalities of dpcomp.org. With this dpcomp_core, a user could reproduce previous evalutations, compare provided algorithms with new data, or evaluate new algorithms. 
+## About
+This repository was originally written and tested as a python2 module, but has since been updated to support python3. Going forward, **we will only support the python3 language**. For the convenience of python2 users, we have created a *python2*, but will not be supporting it with improvements or bug fixes.
+
+The repository contains datasets, workloads, and algorithms used in DPBench, and is supporting core functionalities of dpcomp.org. With this dpcomp_core, a user could reproduce previous evalutations, compare provided algorithms with new data, or evaluate new algorithms. 
 
 References to supporting paper are [here](#ref).
 ## DPComp Core Setup
@@ -31,15 +34,15 @@ Be sure to setup the environment (describe above) first. You will need to instal
 several packages. The following commands should work for debian systems.
 
 ```bash
-sudo apt-get install python-virtualenv gfortran liblapack-dev libblas-dev 
-sudo apt-get install libpq-dev python-dev libncurses5-dev swig
+sudo apt-get install python3.4-venv gfortran liblapack-dev libblas-dev 
+sudo apt-get install libpq-dev python3-dev libncurses5-dev swig
 ```
 
 Next, create a virtual environment for python by entering the commands below.
 
 ```bash
 mkdir $DPCOMP_LOG_PATH
-virtualenv $PYTHON_HOME
+pyvenv-3.4 $PYTHON_HOME
 source $PYTHON_HOME/bin/activate
 cd $DPCOMP_CORE
 pip install -r resources/requirements.txt
