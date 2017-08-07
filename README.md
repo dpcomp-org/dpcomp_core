@@ -2,7 +2,7 @@
 [DPComp.org](https://www.dpcomp.org/) is a web-based tool designed to help both practitioners and researchers assess the accuracy of state-of-the-art differentially private algorithms based on [DPBench](#dpbench).
 
 ## About
-This repository was originally written and tested as a python2 module, but has since been updated to support python3. Going forward, **we will only support the python3 language**. For the convenience of python2 users, we have created a *python2*, but will not be supporting it with improvements or bug fixes.
+This repository was originally written and tested as a python2 module, but has since been updated to support python3. Going forward, **we will only support the python3 language**. For the convenience of python2 users, we have created a *python2* branch, but will not be supporting it with improvements or bug fixes.
 
 The repository contains datasets, workloads, and algorithms used in DPBench, and is supporting core functionalities of dpcomp.org. With this dpcomp_core, a user could reproduce previous evalutations, compare provided algorithms with new data, or evaluate new algorithms. 
 
