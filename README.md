@@ -42,7 +42,7 @@ Next, create a virtual environment for python by entering the commands below.
 
 ```bash
 mkdir $DPCOMP_LOG_PATH
-pyvenv-3.4 $PYTHON_HOME
+python3.7 -m venv $PYTHON_HOME
 source $PYTHON_HOME/bin/activate
 cd $DPCOMP_CORE
 pip install -r resources/requirements.txt

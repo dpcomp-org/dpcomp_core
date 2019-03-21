@@ -30,7 +30,7 @@ class privelet_engine(estimate_engine.estimate_engine):
         for c in range(m):
             y[:n] = numpy.hstack([y[:n][0::2] + y[:n][1::2],
                                   y[:n][0::2] - y[:n][1::2]])
-            n /= 2
+            n = n // 2
         return y
 
     @staticmethod
